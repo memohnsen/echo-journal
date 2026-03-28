@@ -1,7 +1,7 @@
-@import 'tailwindcss';
-@import 'uniwind';
+@import "tailwindcss";
+@import "uniwind";
 
-@import 'heroui-native/styles';
+@import "heroui-native/styles";
 @source './node_modules/heroui-native/lib';
 
 /* HeroUI Components: https://v3.heroui.com/docs/native/components */
@@ -12,16 +12,42 @@
 @layer theme {
   :root {
     @variant light {
-      --color-background: #ffffff;
-      --color-card-background: #f2f2f7;
-      --color-primary-text: #000000;
-      --color-secondary-text: #ffffff;
+      --color-surface: #ffffff;
+      --color-surface-variant: #e1e2ec;
+      --color-inverse-on-surface: #eef0ff;
+      --color-on-surface: #191a20;
+      --color-on-surface-variant: #40434f;
+      --color-outline: #6c7085;
+      --color-outline-variant: #c1c3ce;
+      --color-primary: #00419c;
+      --color-primary-container: #1f70f5;
+      --color-on-primary: #fff;
+      --color-on-primary-fixed: #001945;
+      --color-inverse-primary: #bac6e9;
+      --color-secondary: #3b4663;
+      --color-secondary-container: #6b7796;
+      --color-on-error-container: #680014;
+      --color-error-container: #ffedec;
+      --color-on-error: #fff;
     }
     @variant dark {
-      --color-background: #000000;
-      --color-card-background: #1c1c1e;
-      --color-primary-text: #ffffff;
-      --color-secondary-text: #ffffff;
+      --color-surface: #ffffff;
+      --color-surface-variant: #e1e2ec;
+      --color-inverse-on-surface: #eef0ff;
+      --color-on-surface: #191a20;
+      --color-on-surface-variant: #40434f;
+      --color-outline: #6c7085;
+      --color-outline-variant: #c1c3ce;
+      --color-primary: #00419c;
+      --color-primary-container: #1f70f5;
+      --color-on-primary: #fff;
+      --color-on-primary-fixed: #001945;
+      --color-inverse-primary: #bac6e9;
+      --color-secondary: #3b4663;
+      --color-secondary-container: #6b7796;
+      --color-on-error-container: #680014;
+      --color-error-container: #ffedec;
+      --color-on-error: #fff;
     }
   }
 }
