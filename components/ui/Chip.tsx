@@ -58,13 +58,13 @@ const Chip = ({
       case "outline":
         return {
           color: "black",
-          fontSize: 16,
+          fontSize: 14,
         };
 
       case "selected":
         return {
           color: "black",
-          fontSize: 16,
+          fontSize: 14,
         };
 
       default:

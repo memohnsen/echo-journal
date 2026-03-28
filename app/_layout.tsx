@@ -28,7 +28,7 @@ export default function RootLayout() {
             name="settings"
             options={{
               headerShown: true,
-              headerLargeTitleEnabled: true,
+              headerLargeTitleEnabled: false,
               headerTitle: "Settings",
               headerTransparent: true,
               headerBackButtonDisplayMode: "minimal",

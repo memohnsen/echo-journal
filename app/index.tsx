@@ -36,7 +36,7 @@ const data: Entry[] = [
 export default function Index() {
   const [moodOpen, setMoodOpen] = useState(false);
   const [topicsOpen, setTopicsOpen] = useState(false);
-  const [selectedMood, setSelectedMood] = useState("excited");
+  const [selectedMood, setSelectedMood] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
 
   const filteredData = (): Entry[] => {
