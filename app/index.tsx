@@ -1,8 +1,11 @@
 import EntryCard from "@/components/EntryCard";
 import Chip from "@/components/ui/Chip";
+import MoodDropdown from "@/components/ui/MoodDropdown";
+import TopicDropdown from "@/components/ui/TopicDropdown";
 import { Entry } from "@/types/entry";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 const data: Entry[] = [
@@ -31,10 +34,21 @@ const data: Entry[] = [
 ];
 
 export default function Index() {
+  const [moodOpen, setMoodOpen] = useState(false);
+  const [topicsOpen, setTopicsOpen] = useState(false);
+  const [selectedMood, setSelectedMood] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState("");
+
+  const filteredData = (): Entry[] => {
+    if (!selectedMood) return data;
+
+    return data.filter((item) => item.mood === selectedMood);
+  };
+
   return (
     <View className="flex-1 bg-inverse-on-surface">
       <FlashList
-        data={data}
+        data={filteredData()}
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{
           paddingBottom: 70,
@@ -43,8 +57,16 @@ export default function Index() {
           <View className="mx-4">
             <Text className="font-bold text-4xl mb-4">EchoJournal</Text>
             <View className="flex-row gap-2 mb-8">
-              <Chip text="All Moods" onPress={() => {}} variant={"outline"} />
-              <Chip text="All Topics" onPress={() => {}} variant={"outline"} />
+              <Chip
+                text={selectedMood ? selectedMood.capitalize() : "All Moods"}
+                onPress={() => setMoodOpen((prev) => !prev)}
+                variant={"outline"}
+              />
+              <Chip
+                text={selectedTopic ? selectedTopic.capitalize() : "All Topics"}
+                onPress={() => setTopicsOpen((prev) => !prev)}
+                variant={"outline"}
+              />
             </View>
           </View>
         )}
@@ -57,9 +79,26 @@ export default function Index() {
           />
         )}
       />
+      {moodOpen && (
+        <MoodDropdown
+          visible={moodOpen}
+          setMoodOpen={setMoodOpen}
+          setSelectedMood={setSelectedMood}
+          selectedMood={selectedMood}
+        />
+      )}
+
+      {topicsOpen && (
+        <TopicDropdown
+          visible={topicsOpen}
+          setTopicOpen={setTopicsOpen}
+          setSelectedTopic={setSelectedTopic}
+          selectedTopic={selectedTopic}
+        />
+      )}
 
       <TouchableOpacity
-        className="absolute bottom-10 right-8 bg-primary-container rounded-full p-3 shadow"
+        className="absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"
         onPress={() => {}}
       >
         <Ionicons name="add" size={32} color="white" />
