@@ -23,7 +23,10 @@ const EntryCard = ({ mood, title, description, topics }: Entry) => {
 
   return (
     <View className="flex-row mx-4 mb-4">
-      <Image source={getImageByMood()} style={{ width: 32, height: 32 }} />
+      <Image
+        source={getImageByMood()}
+        style={{ width: 32, height: 32, marginLeft: 4 }}
+      />
       <View className="bg-surface w-5/6 rounded-2xl p-4 ml-4 shadow">
         <Text className="font-bold text-xl">{title}</Text>
         <Waveform mood={mood} currentTime="0:00" totalTime="12:30" />

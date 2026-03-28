@@ -36,13 +36,28 @@ const data: Entry[] = [
 export default function Index() {
   const [moodOpen, setMoodOpen] = useState(false);
   const [topicsOpen, setTopicsOpen] = useState(false);
-  const [selectedMood, setSelectedMood] = useState("");
+  const [selectedMood, setSelectedMood] = useState("excited");
   const [selectedTopic, setSelectedTopic] = useState("");
 
   const filteredData = (): Entry[] => {
-    if (!selectedMood) return data;
+    let filtered;
 
-    return data.filter((item) => item.mood === selectedMood);
+    if (selectedMood && selectedTopic) {
+      filtered = data.filter(
+        (item) =>
+          item.mood === selectedMood && item.topics?.includes(selectedTopic),
+      );
+    } else if (selectedMood) {
+      filtered = data.filter((item) => item.mood === selectedMood);
+    } else if (selectedTopic) {
+      filtered = data.filter((item) =>
+        item.topics?.filter((i) => i.includes(selectedTopic)),
+      );
+    } else {
+      filtered = data;
+    }
+
+    return filtered;
   };
 
   return (
@@ -56,16 +71,21 @@ export default function Index() {
         ListHeaderComponent={() => (
           <View className="mx-4">
             <Text className="font-bold text-4xl mb-4">EchoJournal</Text>
-            <View className="flex-row gap-2 mb-8">
+            <View className="flex-row gap-2 mb-8 items-center">
               <Chip
                 text={selectedMood ? selectedMood.capitalize() : "All Moods"}
                 onPress={() => setMoodOpen((prev) => !prev)}
-                variant={"outline"}
+                variant={selectedMood ? "selected" : "outline"}
+                clearFilter={() => setSelectedMood("")}
+                selectedMood={selectedMood}
+                image={true}
               />
               <Chip
                 text={selectedTopic ? selectedTopic.capitalize() : "All Topics"}
                 onPress={() => setTopicsOpen((prev) => !prev)}
-                variant={"outline"}
+                variant={selectedTopic ? "selected" : "outline"}
+                clearFilter={() => setSelectedTopic("")}
+                selectedTopic={selectedTopic}
               />
             </View>
           </View>
@@ -79,6 +99,7 @@ export default function Index() {
           />
         )}
       />
+
       {moodOpen && (
         <MoodDropdown
           visible={moodOpen}
