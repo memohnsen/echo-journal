@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+@import 'uniwind';
+
+@import 'heroui-native/styles';
+@source './node_modules/heroui-native/lib';
+
+/* HeroUI Components: https://v3.heroui.com/docs/native/components */
+/* Color Pallete Generator: https://coolors.co/ */
+/* Android Icons: https://fonts.google.com/icons */
+/* Ionicons: https://oblador.github.io/react-native-vector-icons/#Ionicons */
+
+@layer theme {
+  :root {
+    @variant light {
+      --color-background: #ffffff;
+      --color-card-background: #f2f2f7;
+      --color-primary-text: #000000;
+      --color-secondary-text: #ffffff;
+    }
+    @variant dark {
+      --color-background: #000000;
+      --color-card-background: #1c1c1e;
+      --color-primary-text: #ffffff;
+      --color-secondary-text: #ffffff;
+    }
+  }
+}
