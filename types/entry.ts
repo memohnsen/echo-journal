@@ -1,6 +1,14 @@
 export interface Entry {
-  mood: "excited" | "peaceful" | "neutral" | "sad" | "stressed";
+  mood: Mood;
   title: string;
   description?: string;
   topics?: string[];
 }
+
+export type Mood =
+  | "excited"
+  | "peaceful"
+  | "neutral"
+  | "sad"
+  | "stressed"
+  | "other";

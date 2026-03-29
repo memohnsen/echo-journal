@@ -1,12 +1,13 @@
 import Chip from "@/components/ui/Chip";
-import { MOODS, TOPICS } from "@/constants/entries";
-import { Image } from "expo-image";
+import EmotionPicker from "@/components/ui/EmotionPicker";
+import { TOPICS } from "@/constants/entries";
+import { Mood } from "@/types/entry";
 import { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 
 const Settings = () => {
-  const [selectedMood, setSelectedMood] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState("");
+  const [selectedMood, setSelectedMood] = useState<Mood>("other");
+  const [selectedTopic, setSelectedTopic] = useState([""]);
 
   return (
     <View className="bg-inverse-on-surface flex-1 pt-34 mx-4">
@@ -16,25 +17,10 @@ const Settings = () => {
           Select default mood to apply to all new entries
         </Text>
 
-        <View className="flex-row-reverse mt-4 justify-between">
-          {MOODS.map((mood) => (
-            <TouchableOpacity
-              onPress={() =>
-                setSelectedMood((prev) => (prev === mood.mood ? "" : mood.mood))
-              }
-              className="items-center gap-2"
-            >
-              <Image
-                source={selectedMood === mood.mood ? mood.image : mood.outline}
-                style={{ height: 40, width: 40 }}
-                contentFit="contain"
-              />
-              <Text className="text-on-surface-variant text-md">
-                {mood.mood.capitalize()}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <EmotionPicker
+          selectedMood={selectedMood}
+          setSelectedMood={setSelectedMood}
+        />
       </View>
 
       <View className="bg-white p-4 rounded-2xl mt-4">
@@ -47,9 +33,13 @@ const Settings = () => {
             <Chip
               text={topic.capitalize()}
               onPress={() =>
-                setSelectedTopic((prev) => (prev === topic ? "" : topic))
+                setSelectedTopic((prev) =>
+                  prev.includes(topic)
+                    ? prev.filter((t) => t !== topic)
+                    : [...prev, topic],
+                )
               }
-              variant={selectedTopic === topic ? "selected" : "filled"}
+              variant={selectedTopic.includes(topic) ? "selected" : "filled"}
             />
           ))}
         </View>

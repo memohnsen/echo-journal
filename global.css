@@ -23,6 +23,7 @@
       --color-primary-container: #1f70f5;
       --color-on-primary: #fff;
       --color-on-primary-fixed: #001945;
+      --color-on-primary-container: #eef0ff;
       --color-inverse-primary: #bac6e9;
       --color-secondary: #3b4663;
       --color-secondary-container: #6b7796;
@@ -40,6 +41,7 @@
       --color-outline-variant: #c1c3ce;
       --color-primary: #00419c;
       --color-primary-container: #1f70f5;
+      --color-on-primary-container: #eef0ff;
       --color-on-primary: #fff;
       --color-on-primary-fixed: #001945;
       --color-inverse-primary: #bac6e9;

@@ -1,163 +1,74 @@
+import { buttonStyling, MOODS } from "@/constants/entries";
+import { Mood } from "@/types/entry";
 import { Ionicons } from "@expo/vector-icons";
 import { Fragment } from "react";
-import { Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  ColorValue,
+  DimensionValue,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface WaveformProps {
-  mood: "excited" | "peaceful" | "neutral" | "sad" | "stressed";
+  mood: Mood;
   currentTime: string;
   totalTime: string;
+  length?: number;
 }
 
-const Waveform = ({ mood, currentTime, totalTime }: WaveformProps) => {
-  const backgroundStyling = (): ViewStyle => {
-    switch (mood) {
-      case "excited":
-        return {
-          backgroundColor: "#F5F2EF",
-          height: 40,
-          marginVertical: 8,
-          borderRadius: 999,
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 4,
-        };
-      case "peaceful":
-        return {
-          backgroundColor: "#F6F2F5",
-          height: 40,
-          marginVertical: 8,
-          borderRadius: 999,
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 4,
-        };
-      case "neutral":
-        return {
-          backgroundColor: "#EEF7F3",
-          height: 40,
-          marginVertical: 8,
-          borderRadius: 999,
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 4,
-        };
-      case "sad":
-        return {
-          backgroundColor: "#EFF4F8",
-          height: 40,
-          marginVertical: 8,
-          borderRadius: 999,
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 4,
-        };
-      default:
-        return {
-          backgroundColor: "#F8EFEF",
-          height: 40,
-          marginVertical: 8,
-          borderRadius: 999,
-          flexDirection: "row",
-          alignItems: "center",
-          paddingLeft: 4,
-        };
-    }
+const Waveform = ({
+  mood,
+  currentTime,
+  totalTime,
+  length = 25,
+}: WaveformProps) => {
+  const getBackground = (): ColorValue => {
+    return (
+      MOODS.find((item) => item.mood === mood)?.backgroundColor ?? "#eef0ff"
+    );
   };
 
-  const waveStyling = (): ViewStyle => {
-    switch (mood) {
-      case "excited":
-        return {
-          backgroundColor: "#DDD2C8",
-          borderRadius: 999,
-          marginRight: 3,
-          width: 3,
-        };
-      case "peaceful":
-        return {
-          backgroundColor: "#E1CEDB",
-          borderRadius: 999,
-          marginRight: 3,
-          width: 3,
-        };
-      case "neutral":
-        return {
-          backgroundColor: "#B9DDCB",
-          borderRadius: 999,
-          marginRight: 3,
-          width: 3,
-        };
-      case "sad":
-        return {
-          backgroundColor: "#C5D8E9",
-          borderRadius: 999,
-          marginRight: 3,
-          width: 3,
-        };
-      default:
-        return {
-          backgroundColor: "#E9C5C5",
-          borderRadius: 999,
-          marginRight: 3,
-          width: 3,
-        };
-    }
+  const getWaveColor = (): ColorValue => {
+    return MOODS.find((item) => item.mood === mood)?.waveColor ?? "#bac6e9";
   };
 
-  const buttonStyling = () => {
-    switch (mood) {
-      case "excited":
-        return "#DB6C0B";
-      case "peaceful":
-        return "#BE3294";
-      case "neutral":
-        return "#41B278";
-      case "sad":
-        return "#3A8EDE";
-      default:
-        return "#DE3A3A";
-    }
-  };
-
-  const smWave = () => {
-    return <View style={[waveStyling(), { height: 8 }]} />;
-  };
-
-  const mdWave = () => {
-    return <View style={[waveStyling(), { height: 12 }]} />;
-  };
-
-  const lgWave = () => {
-    return <View style={[waveStyling(), { height: 14 }]} />;
-  };
-
-  const xlWave = () => {
-    return <View style={[waveStyling(), { height: 16 }]} />;
+  const wave = (height: DimensionValue) => {
+    return (
+      <View
+        style={[
+          styles.wave,
+          { backgroundColor: getWaveColor() },
+          { height: height },
+        ]}
+      />
+    );
   };
 
   const selectWaveform = () => {
     const random = Math.floor(Math.random() * 4);
     if (random === 0) {
-      return smWave();
+      return wave(8);
     } else if (random === 1) {
-      return mdWave();
+      return wave(12);
     } else if (random === 2) {
-      return lgWave();
+      return wave(14);
     } else {
-      return xlWave();
+      return wave(16);
     }
   };
 
   return (
-    <View style={backgroundStyling()}>
+    <View style={[styles.background, { backgroundColor: getBackground() }]}>
       <TouchableOpacity
         onPress={() => {}}
         className="bg-white shadow rounded-full p-2 mr-2"
       >
-        <Ionicons name="play" size={18} color={buttonStyling()} />
+        <Ionicons name="play" size={18} color={buttonStyling(mood)} />
       </TouchableOpacity>
 
-      {Array.from({ length: 25 }, (_, i) => (
+      {Array.from({ length }, (_, i) => (
         <Fragment key={i}>{selectWaveform()}</Fragment>
       ))}
 
@@ -169,3 +80,19 @@ const Waveform = ({ mood, currentTime, totalTime }: WaveformProps) => {
 };
 
 export default Waveform;
+
+const styles = StyleSheet.create({
+  wave: {
+    borderRadius: 999,
+    marginRight: 3,
+    width: 3,
+  },
+  background: {
+    height: 40,
+    marginVertical: 8,
+    borderRadius: 999,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 4,
+  },
+});

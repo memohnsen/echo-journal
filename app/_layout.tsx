@@ -38,7 +38,7 @@ export default function RootLayout() {
             name="create"
             options={{
               headerShown: true,
-              headerLargeTitleEnabled: true,
+              headerLargeTitleEnabled: false,
               headerTitle: "New Entry",
               headerTransparent: true,
               headerBackButtonDisplayMode: "minimal",

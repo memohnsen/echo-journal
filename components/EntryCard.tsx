@@ -1,3 +1,4 @@
+import { MOODS } from "@/constants/entries";
 import { Entry } from "@/types/entry";
 import "@/utils/capitalize";
 import { Image } from "expo-image";
@@ -7,18 +8,8 @@ import Waveform from "./ui/Waveform";
 
 const EntryCard = ({ mood, title, description, topics }: Entry) => {
   const getImageByMood = () => {
-    switch (mood) {
-      case "excited":
-        return require("@/assets/images/excited.svg");
-      case "peaceful":
-        return require("@/assets/images/peaceful.svg");
-      case "neutral":
-        return require("@/assets/images/neutral.svg");
-      case "sad":
-        return require("@/assets/images/sad.svg");
-      default:
-        return require("@/assets/images/stressed.svg");
-    }
+    const moodsAll = MOODS.filter((item) => item.mood === mood);
+    return moodsAll.map((i) => i.image);
   };
 
   return (
