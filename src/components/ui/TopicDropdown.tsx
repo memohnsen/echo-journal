@@ -26,7 +26,7 @@ const TopicDropdown = ({
       <View className="flex-1 items-center pt-52">
         <View className="items-start gap-4 bg-surface w-11/12 p-4 rounded-2xl shadow">
           {TOPICS.map((topic) => (
-            <View className="flex-row items-center gap-60">
+            <View key={topic} className="flex-row items-center gap-60">
               <TouchableOpacity
                 onPress={() => {
                   setSelectedTopic((prev) => (prev === topic ? "" : topic));

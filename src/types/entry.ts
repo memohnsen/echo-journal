@@ -2,7 +2,7 @@ export interface Entry {
   mood: Mood;
   title: string;
   description?: string;
-  topics?: string[];
+  topics?: string;
   date: string;
   audioURI?: string;
   duration?: string;

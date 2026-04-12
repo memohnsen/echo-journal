@@ -16,6 +16,7 @@ const EmotionPicker = ({
     <View className="flex-row-reverse mt-8 justify-between">
       {MOODS.map((mood) => (
         <TouchableOpacity
+          key={mood.mood}
           onPress={() => {
             setSelectedMood((prev) =>
               prev === mood.mood ? "other" : mood.mood,

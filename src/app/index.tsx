@@ -22,36 +22,6 @@ type ListItem =
   | { type: "header"; date: string; id: string }
   | { type: "entry"; entry: Entry; id: string };
 
-const data: Entry[] = [
-  {
-    title: "My Entry",
-    description: "sample",
-    mood: "excited",
-    topics: ["work", "friends"],
-    date: "3/29/2026",
-  },
-  {
-    title: "My Entry",
-    mood: "sad",
-    date: "3/29/2026",
-  },
-  {
-    title: "My Entry",
-    mood: "neutral",
-    date: "3/28/2026",
-  },
-  {
-    title: "My Entry",
-    mood: "peaceful",
-    date: "3/28/2026",
-  },
-  {
-    title: "My Entry",
-    mood: "stressed",
-    date: "3/27/2026",
-  },
-];
-
 export default function Index() {
   const [moodOpen, setMoodOpen] = useState(false);
   const [topicsOpen, setTopicsOpen] = useState(false);
@@ -59,23 +29,27 @@ export default function Index() {
   const [selectedTopic, setSelectedTopic] = useState("");
   const [openSheet, setOpenSheet] = useState(false);
 
+  const [storedData, setStoredData] = useState<Entry[]>();
+
   // LIST DATA
   const filteredData = (): Entry[] => {
     let filtered;
 
-    if (selectedMood && selectedTopic) {
-      filtered = data.filter(
-        (item) =>
-          item.mood === selectedMood && item.topics?.includes(selectedTopic),
-      );
-    } else if (selectedMood) {
-      filtered = data.filter((item) => item.mood === selectedMood);
-    } else if (selectedTopic) {
-      filtered = data.filter((item) =>
-        item.topics?.filter((i) => i.includes(selectedTopic)),
-      );
+    if (storedData) {
+      if (selectedMood && selectedTopic) {
+        filtered = storedData.filter(
+          (item) =>
+            item.mood === selectedMood && item.topics?.includes(selectedTopic),
+        );
+      } else if (selectedMood) {
+        filtered = storedData.filter((item) => item.mood === selectedMood);
+      } else if (selectedTopic) {
+        filtered = storedData.filter((item) => item.topics === selectedTopic);
+      } else {
+        filtered = storedData;
+      }
     } else {
-      filtered = data;
+      return [];
     }
 
     return filtered;
@@ -124,6 +98,20 @@ export default function Index() {
     return now.toLocaleDateString();
   };
 
+  useEffect(() => {
+    const keys = storage.getAllKeys();
+    const entryKeys = keys.filter((key) => key.includes("-"));
+    const entryData = entryKeys.map((data) => {
+      const item = storage.getString(data);
+      if (item) {
+        return JSON.parse(item);
+      } else {
+        console.log("no mmkv data found");
+      }
+    });
+    setStoredData(entryData);
+  }, []);
+
   // RECORD AUDIO
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder);
@@ -144,6 +132,7 @@ export default function Index() {
     await audioRecorder.stop();
     if (audioRecorder.uri) {
       storage.set("tmpRecordingTitle", audioRecorder.uri);
+      console.log("stored audio path");
     }
   };
 
@@ -250,8 +239,9 @@ export default function Index() {
                 title={item.entry.title}
                 description={item.entry.description}
                 mood={item.entry.mood}
-                topics={item.entry.topics?.map((i) => i)}
+                topics={item.entry.topics}
                 date={item.entry.date}
+                audioURI={item.entry.audioURI}
               />
             );
           }}

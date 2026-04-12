@@ -3,7 +3,7 @@ import EmotionPicker from "@/src/components/ui/EmotionPicker";
 import Waveform from "@/src/components/ui/Waveform";
 import { buttonStyling, MOODS, TOPICS } from "@/src/constants/entries";
 import { storage } from "@/src/constants/mmkv";
-import { Mood } from "@/src/types/entry";
+import { Entry, Mood } from "@/src/types/entry";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAudioPlayer } from "expo-audio";
 import { Image } from "expo-image";
@@ -25,6 +25,21 @@ const Create = () => {
   const audioPath = storage.getString("tmpRecordingTitle");
 
   const player = useAudioPlayer(audioPath);
+
+  const saveToStorage = () => {
+    const item: Entry = {
+      mood: selectedMood,
+      title: title,
+      description: description,
+      topics: topics,
+      date: new Date().toLocaleDateString(),
+      audioURI: audioPath,
+    };
+
+    const itemObject = JSON.stringify(item);
+    storage.set(`${title}-${new Date().toLocaleDateString()}`, itemObject);
+    console.log("save successful");
+  };
 
   const getImageByMood = () => {
     const mood = MOODS.filter((mood) => mood.mood === selectedMood);
@@ -134,7 +149,10 @@ const Create = () => {
           <Text className="text-primary font-semibold text-lg">Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.back()}
+          onPress={() => {
+            saveToStorage();
+            router.back();
+          }}
           className="items-center justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-4 rounded-full"
         >
           <Text className="text-white font-semibold text-lg">Save</Text>

@@ -1,0 +1,7 @@
+-[x] rename mmkv store to title from tmp
+-[x] store entries to mmkv object
+-[x] playback for audio on index
+-[x] splash screen icon
+-[ ] time for audio on recording and waveform
+-[ ] accessibility
+-[ ] testing - unit and maestro
