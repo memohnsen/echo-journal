@@ -1,31 +1,42 @@
 import { buttonStyling, MOODS } from "@/src/constants/entries";
 import { Mood } from "@/src/types/entry";
 import { Ionicons } from "@expo/vector-icons";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import {
   ColorValue,
   DimensionValue,
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
+
+const WAVE_PITCH = 6;
 
 interface WaveformProps {
   mood: Mood;
   currentTime: string;
   totalTime: string;
-  length?: number;
   onPress: () => void;
+  className?: string;
 }
 
 const Waveform = ({
   mood,
   currentTime,
   totalTime,
-  length = 25,
   onPress,
+  className,
 }: WaveformProps) => {
+  const { width: windowWidth } = useWindowDimensions();
+  const [stripWidth, setStripWidth] = useState(0);
+
+  const waveCount =
+    stripWidth > 0
+      ? Math.max(1, Math.floor(stripWidth / WAVE_PITCH))
+      : Math.max(12, Math.floor((windowWidth * 0.45) / WAVE_PITCH));
+
   const getBackground = (): ColorValue => {
     return (
       MOODS.find((item) => item.mood === mood)?.backgroundColor ?? "#eef0ff"
@@ -62,7 +73,10 @@ const Waveform = ({
   };
 
   return (
-    <View style={[styles.background, { backgroundColor: getBackground() }]}>
+    <View
+      style={[styles.background, { backgroundColor: getBackground() }]}
+      className={className}
+    >
       <TouchableOpacity
         onPress={onPress}
         className="bg-white shadow rounded-full p-2 mr-2"
@@ -70,11 +84,16 @@ const Waveform = ({
         <Ionicons name="play" size={18} color={buttonStyling(mood)} />
       </TouchableOpacity>
 
-      {Array.from({ length }, (_, i) => (
-        <Fragment key={i}>{selectWaveform()}</Fragment>
-      ))}
+      <View
+        style={styles.waveStrip}
+        onLayout={(e) => setStripWidth(e.nativeEvent.layout.width)}
+      >
+        {Array.from({ length: waveCount }, (_, i) => (
+          <Fragment key={i}>{selectWaveform()}</Fragment>
+        ))}
+      </View>
 
-      <Text className="text-xs mr-1 ml-2">
+      <Text className="text-xs mr-1 ml-2 shrink-0">
         {currentTime}/{totalTime}
       </Text>
     </View>
@@ -96,5 +115,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingLeft: 4,
+  },
+  waveStrip: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    minWidth: 0,
+    overflow: "hidden",
   },
 });

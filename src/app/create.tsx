@@ -5,14 +5,16 @@ import { buttonStyling, MOODS, TOPICS } from "@/src/constants/entries";
 import { storage } from "@/src/constants/mmkv";
 import { Entry, Mood } from "@/src/types/entry";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAudioPlayer } from "expo-audio";
+import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { recordingTimeSeconds } from "../utils/formatTime";
 
 const Create = () => {
+  const { duration } = useLocalSearchParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -25,6 +27,7 @@ const Create = () => {
   const audioPath = storage.getString("tmpRecordingTitle");
 
   const player = useAudioPlayer(audioPath);
+  const status = useAudioPlayerStatus(player);
 
   const saveToStorage = () => {
     const item: Entry = {
@@ -34,6 +37,7 @@ const Create = () => {
       topics: topics,
       date: new Date().toLocaleDateString(),
       audioURI: audioPath,
+      duration: duration,
     };
 
     const itemObject = JSON.stringify(item);
@@ -95,11 +99,14 @@ const Create = () => {
         </View>
         <View className="flex-row items-center justify-between mt-2">
           <Waveform
+            className="flex-1 min-w-0 mr-2"
             mood={selectedMood ? selectedMood : "other"}
-            length={32}
-            currentTime={"0:00"}
-            totalTime={"12:30"}
-            onPress={() => player.play()}
+            currentTime={recordingTimeSeconds(status.currentTime)}
+            totalTime={recordingTimeSeconds(status.duration)}
+            onPress={() => {
+              player.seekTo(0);
+              player.play();
+            }}
           />
           <TouchableOpacity
             onPress={() => generateSummary()}

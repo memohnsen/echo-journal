@@ -17,6 +17,7 @@ import { router } from "expo-router";
 import { BottomSheet } from "heroui-native";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
+import { recordingTimeMs } from "../utils/formatTime";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -98,7 +99,7 @@ export default function Index() {
     return now.toLocaleDateString();
   };
 
-  useEffect(() => {
+  const syncStorageToState = () => {
     const keys = storage.getAllKeys();
     const entryKeys = keys.filter((key) => key.includes("-"));
     const entryData = entryKeys.map((data) => {
@@ -110,21 +111,18 @@ export default function Index() {
       }
     });
     setStoredData(entryData);
+  };
+
+  useEffect(() => {
+    syncStorageToState();
   }, []);
 
   // RECORD AUDIO
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder);
 
-  const recordingTime = () => {
-    const total = Math.floor((recorderState.durationMillis % 60000) / 1000);
-    const minutes = Math.floor(total / 60);
-    const seconds = total % 60;
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  };
-
   const record = async () => {
-    await audioRecorder.prepareToRecordAsync();
+    await audioRecorder.prepareToRecordAsync(RecordingPresets.HIGH_QUALITY);
     audioRecorder.record();
   };
 
@@ -195,6 +193,7 @@ export default function Index() {
           contentContainerStyle={{
             paddingBottom: 70,
           }}
+          onRefresh={() => syncStorageToState()}
           ListHeaderComponent={() => (
             <View className="mx-4">
               <Text className="font-bold text-4xl mb-4">EchoJournal</Text>
@@ -286,7 +285,7 @@ export default function Index() {
                 : "Recording paused"}
             </BottomSheet.Title>
             <BottomSheet.Description className="text-center mt-1">
-              {recordingTime()}
+              {recordingTimeMs(recorderState.durationMillis)}
             </BottomSheet.Description>
 
             <View className="flex-row mx-8 mb-8 gap-4 mt-8 items-center justify-between">
@@ -313,7 +312,12 @@ export default function Index() {
                   onPress={() => {
                     stopRecording();
                     setOpenSheet(false);
-                    router.push("/create");
+                    router.push({
+                      pathname: "/create",
+                      params: {
+                        duration: recordingTimeMs(recorderState.durationMillis),
+                      },
+                    });
                   }}
                 >
                   <Ionicons

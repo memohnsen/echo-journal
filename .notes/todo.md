@@ -2,6 +2,11 @@
 -[x] store entries to mmkv object
 -[x] playback for audio on index
 -[x] splash screen icon
--[ ] time for audio on recording and waveform
+-[x] time for audio on recording and waveform
+-[x] audio won't play more than once - issue: audio doesnt reset, stays at end
+-[ ] animation for wave forms playing
+-[ ] conditional sizing of waveform count by screen size
 -[ ] accessibility
 -[ ] testing - unit and maestro
+-[ ] add edit / delete entry
+-[ ] let user add own topics

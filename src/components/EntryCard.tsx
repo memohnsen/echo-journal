@@ -5,22 +5,17 @@ import { Image } from "expo-image";
 import { Text, View } from "react-native";
 import Chip from "./ui/Chip";
 import Waveform from "./ui/Waveform";
-import { useAudioPlayer } from "expo-audio";
+import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
+import { recordingTimeSeconds } from "../utils/formatTime";
 
-const EntryCard = ({
-  mood,
-  title,
-  description,
-  topics,
-  date,
-  audioURI,
-}: Entry) => {
+const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
   const getImageByMood = () => {
     const moodsAll = MOODS.filter((item) => item.mood === mood);
     return moodsAll.map((i) => i.image);
   };
 
   const player = useAudioPlayer(audioURI);
+  const status = useAudioPlayerStatus(player);
 
   return (
     <View className="flex-row mx-4 mb-4">
@@ -32,9 +27,12 @@ const EntryCard = ({
         <Text className="font-bold text-xl">{title}</Text>
         <Waveform
           mood={mood}
-          currentTime="0:00"
-          totalTime="12:30"
-          onPress={() => player.play()}
+          currentTime={recordingTimeSeconds(status.currentTime)}
+          totalTime={recordingTimeSeconds(status.duration)}
+          onPress={() => {
+            player.seekTo(0);
+            player.play();
+          }}
         />
         {description && (
           <Text className="text-on-surface-variant text-md">{description}</Text>
