@@ -2,6 +2,7 @@ import Chip from "@/src/components/ui/Chip";
 import { MOODS, TOPICS } from "@/src/constants/entries";
 import { storage } from "@/src/constants/mmkv";
 import { Mood } from "@/src/types/entry";
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -65,9 +66,9 @@ const Settings = () => {
       </View>
 
       <View className="bg-white p-4 rounded-2xl mt-4">
-        <Text className="font-semibold text-lg mb-2">My Mood</Text>
+        <Text className="font-semibold text-lg mb-2">My Topic</Text>
         <Text className="text-on-surface-variant text-md">
-          Select default mood to apply to all new entries
+          Select default topic to apply to all new entries
         </Text>
         <View className="flex-row gap-2 mt-4 items-center">
           {TOPICS.map((topic) => (
@@ -81,6 +82,9 @@ const Settings = () => {
               variant={selectedTopic.includes(topic) ? "selected" : "filled"}
             />
           ))}
+          <TouchableOpacity className="p-1 bg-inverse-on-surface rounded-full">
+            <Ionicons name="add" size={18} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

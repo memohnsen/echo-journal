@@ -2,13 +2,21 @@ import { MOODS } from "@/src/constants/entries";
 import { Entry } from "@/src/types/entry";
 import "@/src/utils/capitalize";
 import { Image } from "expo-image";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Chip from "./ui/Chip";
 import Waveform from "./ui/Waveform";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
+import { router } from "expo-router";
 
-const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
+const EntryCard = ({
+  mood,
+  title,
+  description,
+  topics,
+  date,
+  audioURI,
+}: Entry) => {
   const getImageByMood = () => {
     const moodsAll = MOODS.filter((item) => item.mood === mood);
     return moodsAll.map((i) => i.image);
@@ -29,7 +37,18 @@ const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
   };
 
   return (
-    <View className="flex-row mx-4 mb-4">
+    <TouchableOpacity
+      onPress={() => {
+        router.push({
+          pathname: `/[title]`,
+          params: {
+            title: title,
+            date: date,
+          },
+        });
+      }}
+      className="flex-row mx-4 mb-4"
+    >
       <Image
         source={getImageByMood()}
         style={{ width: 32, height: 32, marginLeft: 4 }}
@@ -59,7 +78,7 @@ const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
           </View>
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

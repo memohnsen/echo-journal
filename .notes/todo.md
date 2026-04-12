@@ -7,8 +7,8 @@
 -[x] conditional sizing of waveform count by screen size
 -[x] animation for wave forms playing
 -[x] pausing of playback on index
+-[x] add edit / delete entry
 -[ ] let user add own topics
--[ ] add edit / delete entry
 -[ ] ai transcript
 -[ ] testing - unit and maestro
 -[ ] accessibility

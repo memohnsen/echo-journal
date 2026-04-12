@@ -57,6 +57,15 @@ export default function RootLayout() {
               headerBackButtonDisplayMode: "minimal",
             }}
           />
+          <Stack.Screen
+            name="[title]"
+            options={{
+              headerShown: true,
+              headerLargeTitleEnabled: false,
+              headerTransparent: true,
+              headerBackButtonDisplayMode: "minimal",
+            }}
+          />
         </Stack>
       </HeroUINativeProvider>
     </GestureHandlerRootView>
