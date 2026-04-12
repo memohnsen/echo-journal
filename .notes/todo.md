@@ -4,9 +4,11 @@
 -[x] splash screen icon
 -[x] time for audio on recording and waveform
 -[x] audio won't play more than once - issue: audio doesnt reset, stays at end
--[ ] animation for wave forms playing
--[ ] conditional sizing of waveform count by screen size
--[ ] accessibility
--[ ] testing - unit and maestro
--[ ] add edit / delete entry
+-[x] conditional sizing of waveform count by screen size
+-[x] animation for wave forms playing
+-[ ] pausing of playback on index
 -[ ] let user add own topics
+-[ ] add edit / delete entry
+-[ ] ai transcript
+-[ ] testing - unit and maestro
+-[ ] accessibility

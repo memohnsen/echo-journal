@@ -6,10 +6,13 @@ export const recordingTimeMs = (duration: number) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-// duration is seconds
 export const recordingTimeSeconds = (duration: number) => {
-  const total = Math.floor(duration % 60);
-  const minutes = Math.floor(total / 60);
-  const seconds = total % 60;
+  const safe = Number.isFinite(duration) ? Math.max(0, duration) : 0;
+  const minutes = Math.floor(safe / 60);
+  const seconds = Math.floor(safe % 60);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
+
+export const audioProgress = (current: number, duration: number) => {
+  return duration > 0 ? Math.min(1, current / duration) : 0;
 };

@@ -11,7 +11,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { recordingTimeSeconds } from "../utils/formatTime";
+import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
 
 const Create = () => {
   const { duration } = useLocalSearchParams();
@@ -26,7 +26,7 @@ const Create = () => {
 
   const audioPath = storage.getString("tmpRecordingTitle");
 
-  const player = useAudioPlayer(audioPath);
+  const player = useAudioPlayer(audioPath, { updateInterval: 33 });
   const status = useAudioPlayerStatus(player);
 
   const saveToStorage = () => {
@@ -103,6 +103,7 @@ const Create = () => {
             mood={selectedMood ? selectedMood : "other"}
             currentTime={recordingTimeSeconds(status.currentTime)}
             totalTime={recordingTimeSeconds(status.duration)}
+            progress={audioProgress(status.currentTime, status.duration)}
             onPress={() => {
               player.seekTo(0);
               player.play();

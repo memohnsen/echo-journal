@@ -6,7 +6,7 @@ import { Text, View } from "react-native";
 import Chip from "./ui/Chip";
 import Waveform from "./ui/Waveform";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { recordingTimeSeconds } from "../utils/formatTime";
+import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
 
 const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
   const getImageByMood = () => {
@@ -14,7 +14,7 @@ const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
     return moodsAll.map((i) => i.image);
   };
 
-  const player = useAudioPlayer(audioURI);
+  const player = useAudioPlayer(audioURI, { updateInterval: 33 });
   const status = useAudioPlayerStatus(player);
 
   return (
@@ -29,6 +29,7 @@ const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
           mood={mood}
           currentTime={recordingTimeSeconds(status.currentTime)}
           totalTime={recordingTimeSeconds(status.duration)}
+          progress={audioProgress(status.currentTime, status.duration)}
           onPress={() => {
             player.seekTo(0);
             player.play();
