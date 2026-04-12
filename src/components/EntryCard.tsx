@@ -17,6 +17,17 @@ const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
   const player = useAudioPlayer(audioURI, { updateInterval: 33 });
   const status = useAudioPlayerStatus(player);
 
+  const handlePlayback = () => {
+    if (status.playing) {
+      player.pause();
+    } else if (status.currentTime === status.duration) {
+      player.seekTo(0);
+      player.play();
+    } else {
+      player.play();
+    }
+  };
+
   return (
     <View className="flex-row mx-4 mb-4">
       <Image
@@ -30,10 +41,8 @@ const EntryCard = ({ mood, title, description, topics, audioURI }: Entry) => {
           currentTime={recordingTimeSeconds(status.currentTime)}
           totalTime={recordingTimeSeconds(status.duration)}
           progress={audioProgress(status.currentTime, status.duration)}
-          onPress={() => {
-            player.seekTo(0);
-            player.play();
-          }}
+          isPlaying={status.playing}
+          onPress={() => handlePlayback()}
         />
         {description && (
           <Text className="text-on-surface-variant text-md">{description}</Text>

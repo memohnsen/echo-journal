@@ -55,6 +55,17 @@ const Create = () => {
     return;
   };
 
+  const handlePlayback = () => {
+    if (status.playing) {
+      player.pause();
+    } else if (status.currentTime === status.duration) {
+      player.seekTo(0);
+      player.play();
+    } else {
+      player.play();
+    }
+  };
+
   useEffect(() => {
     const defaultMood: Mood = storage.getString("defaultMood");
     if (defaultMood) {
@@ -104,10 +115,8 @@ const Create = () => {
             currentTime={recordingTimeSeconds(status.currentTime)}
             totalTime={recordingTimeSeconds(status.duration)}
             progress={audioProgress(status.currentTime, status.duration)}
-            onPress={() => {
-              player.seekTo(0);
-              player.play();
-            }}
+            isPlaying={status.playing}
+            onPress={() => handlePlayback()}
           />
           <TouchableOpacity
             onPress={() => generateSummary()}

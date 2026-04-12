@@ -6,7 +6,7 @@
 -[x] audio won't play more than once - issue: audio doesnt reset, stays at end
 -[x] conditional sizing of waveform count by screen size
 -[x] animation for wave forms playing
--[ ] pausing of playback on index
+-[x] pausing of playback on index
 -[ ] let user add own topics
 -[ ] add edit / delete entry
 -[ ] ai transcript

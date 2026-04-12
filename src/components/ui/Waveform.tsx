@@ -28,6 +28,7 @@ interface WaveformProps {
   onPress: () => void;
   className?: string;
   progress: number;
+  isPlaying: boolean;
 }
 
 const Waveform = ({
@@ -37,6 +38,7 @@ const Waveform = ({
   onPress,
   className,
   progress,
+  isPlaying,
 }: WaveformProps) => {
   const { width: windowWidth } = useWindowDimensions();
   const [stripWidth, setStripWidth] = useState(0);
@@ -112,7 +114,11 @@ const Waveform = ({
         onPress={onPress}
         className="bg-white shadow rounded-full p-2 mr-2"
       >
-        <Ionicons name="play" size={18} color={buttonStyling(mood)} />
+        <Ionicons
+          name={isPlaying ? "pause" : "play"}
+          size={18}
+          color={buttonStyling(mood)}
+        />
       </TouchableOpacity>
 
       <View
