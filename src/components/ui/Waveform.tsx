@@ -1,5 +1,5 @@
-import { buttonStyling, MOODS } from "@/constants/entries";
-import { Mood } from "@/types/entry";
+import { buttonStyling, MOODS } from "@/src/constants/entries";
+import { Mood } from "@/src/types/entry";
 import { Ionicons } from "@expo/vector-icons";
 import { Fragment } from "react";
 import {
@@ -16,6 +16,7 @@ interface WaveformProps {
   currentTime: string;
   totalTime: string;
   length?: number;
+  onPress: () => void;
 }
 
 const Waveform = ({
@@ -23,6 +24,7 @@ const Waveform = ({
   currentTime,
   totalTime,
   length = 25,
+  onPress,
 }: WaveformProps) => {
   const getBackground = (): ColorValue => {
     return (
@@ -62,7 +64,7 @@ const Waveform = ({
   return (
     <View style={[styles.background, { backgroundColor: getBackground() }]}>
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={onPress}
         className="bg-white shadow rounded-full p-2 mr-2"
       >
         <Ionicons name="play" size={18} color={buttonStyling(mood)} />

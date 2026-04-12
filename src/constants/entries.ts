@@ -1,4 +1,4 @@
-import { Mood } from "@/types/entry";
+import { Mood } from "@/src/types/entry";
 import { ColorValue } from "react-native";
 
 export const TOPICS = ["work", "friends", "family", "love", "surprise"];

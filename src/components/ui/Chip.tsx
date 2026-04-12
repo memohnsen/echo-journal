@@ -1,4 +1,4 @@
-import { MOODS } from "@/constants/entries";
+import { MOODS } from "@/src/constants/entries";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import {

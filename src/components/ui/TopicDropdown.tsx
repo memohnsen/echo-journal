@@ -1,5 +1,5 @@
-import { TOPICS } from "@/constants/entries";
-import "@/utils/capitalize";
+import { TOPICS } from "@/src/constants/entries";
+import "@/src/utils/capitalize";
 import { Ionicons } from "@expo/vector-icons";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 

@@ -1,5 +1,5 @@
-import { MOODS } from "@/constants/entries";
-import "@/utils/capitalize";
+import { MOODS } from "@/src/constants/entries";
+import "@/src/utils/capitalize";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Modal, Text, TouchableOpacity, View } from "react-native";

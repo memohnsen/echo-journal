@@ -3,6 +3,9 @@ export interface Entry {
   title: string;
   description?: string;
   topics?: string[];
+  date: string;
+  audioURI?: string;
+  duration?: string;
 }
 
 export type Mood =

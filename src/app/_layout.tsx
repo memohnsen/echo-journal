@@ -1,11 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { HeroUINativeProvider } from "heroui-native";
+import { useEffect } from "react";
 import { Pressable } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "../global.css";
+import "../../global.css";
+
+SplashScreen.preventAutoHideAsync();
+
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+});
 
 export default function RootLayout() {
+  useEffect(() => {
+    setTimeout(() => SplashScreen.hide(), 2000);
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <HeroUINativeProvider>

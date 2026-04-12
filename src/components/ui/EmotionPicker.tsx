@@ -1,5 +1,5 @@
-import { MOODS } from "@/constants/entries";
-import { Mood } from "@/types/entry";
+import { MOODS } from "@/src/constants/entries";
+import { Mood } from "@/src/types/entry";
 import { Image } from "expo-image";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -16,11 +16,11 @@ const EmotionPicker = ({
     <View className="flex-row-reverse mt-8 justify-between">
       {MOODS.map((mood) => (
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
             setSelectedMood((prev) =>
               prev === mood.mood ? "other" : mood.mood,
-            )
-          }
+            );
+          }}
           className="items-center gap-2"
         >
           <Image

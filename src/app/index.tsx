@@ -1,14 +1,26 @@
-import EntryCard from "@/components/EntryCard";
-import Chip from "@/components/ui/Chip";
-import MoodDropdown from "@/components/ui/MoodDropdown";
-import TopicDropdown from "@/components/ui/TopicDropdown";
-import { Entry } from "@/types/entry";
+import EntryCard from "@/src/components/EntryCard";
+import Chip from "@/src/components/ui/Chip";
+import MoodDropdown from "@/src/components/ui/MoodDropdown";
+import TopicDropdown from "@/src/components/ui/TopicDropdown";
+import { storage } from "@/src/constants/mmkv";
+import { Entry } from "@/src/types/entry";
 import { Ionicons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import {
+  AudioModule,
+  RecordingPresets,
+  setAudioModeAsync,
+  useAudioRecorder,
+  useAudioRecorderState,
+} from "expo-audio";
 import { router } from "expo-router";
 import { BottomSheet } from "heroui-native";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
+
+type ListItem =
+  | { type: "header"; date: string; id: string }
+  | { type: "entry"; entry: Entry; id: string };
 
 const data: Entry[] = [
   {
@@ -16,22 +28,27 @@ const data: Entry[] = [
     description: "sample",
     mood: "excited",
     topics: ["work", "friends"],
+    date: "3/29/2026",
   },
   {
     title: "My Entry",
     mood: "sad",
+    date: "3/29/2026",
   },
   {
     title: "My Entry",
     mood: "neutral",
+    date: "3/28/2026",
   },
   {
     title: "My Entry",
     mood: "peaceful",
+    date: "3/28/2026",
   },
   {
     title: "My Entry",
     mood: "stressed",
+    date: "3/27/2026",
   },
 ];
 
@@ -41,11 +58,8 @@ export default function Index() {
   const [selectedMood, setSelectedMood] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
   const [openSheet, setOpenSheet] = useState(false);
-  const [recordingActive, setRecordingActive] = useState(false);
 
-  const glowScale = useRef(new Animated.Value(1)).current;
-  const glowOpacity = useRef(new Animated.Value(0.5)).current;
-
+  // LIST DATA
   const filteredData = (): Entry[] => {
     let filtered;
 
@@ -66,6 +80,90 @@ export default function Index() {
 
     return filtered;
   };
+
+  const toDateTimestamp = (date: string): number => {
+    const parsed = Date.parse(date);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  };
+
+  const buildListItems = (entries: Entry[]): ListItem[] => {
+    const items: ListItem[] = [];
+    let previousDate: string | null = null;
+
+    entries.forEach((entry, index) => {
+      if (entry.date !== previousDate) {
+        items.push({
+          type: "header",
+          date: entry.date,
+          id: `header-${entry.date}-${index}`,
+        });
+        previousDate = entry.date;
+      }
+
+      items.push({
+        type: "entry",
+        entry,
+        id: `entry-${entry.date}-${entry.title}-${index}`,
+      });
+    });
+
+    return items;
+  };
+
+  const sortedEntries = filteredData()
+    .slice()
+    .sort((a, b) => toDateTimestamp(b.date) - toDateTimestamp(a.date));
+
+  const listItems = buildListItems(sortedEntries);
+
+  const today = new Date();
+
+  const yesterday = () => {
+    const now = new Date();
+    now.setDate(now.getDate() - 1);
+    return now.toLocaleDateString();
+  };
+
+  // RECORD AUDIO
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
+  const recorderState = useAudioRecorderState(audioRecorder);
+
+  const recordingTime = () => {
+    const total = Math.floor((recorderState.durationMillis % 60000) / 1000);
+    const minutes = Math.floor(total / 60);
+    const seconds = total % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const record = async () => {
+    await audioRecorder.prepareToRecordAsync();
+    audioRecorder.record();
+  };
+
+  const stopRecording = async () => {
+    await audioRecorder.stop();
+    if (audioRecorder.uri) {
+      storage.set("tmpRecordingTitle", audioRecorder.uri);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const status = await AudioModule.requestRecordingPermissionsAsync();
+      if (!status.granted) {
+        Alert.alert("Permission to access microphone was denied");
+      }
+
+      setAudioModeAsync({
+        playsInSilentMode: true,
+        allowsRecording: true,
+      });
+    })();
+  }, []);
+
+  // ANIMATION
+  const glowScale = useRef(new Animated.Value(1)).current;
+  const glowOpacity = useRef(new Animated.Value(0.5)).current;
 
   useEffect(() => {
     Animated.loop(
@@ -96,13 +194,14 @@ export default function Index() {
         ]),
       ]),
     ).start();
-  }, [recordingActive]);
+  }, [recorderState.isRecording]);
 
   return (
     <>
       <View className="flex-1 bg-inverse-on-surface">
         <FlashList
-          data={filteredData()}
+          data={listItems}
+          keyExtractor={(item) => item.id}
           contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={{
             paddingBottom: 70,
@@ -110,7 +209,7 @@ export default function Index() {
           ListHeaderComponent={() => (
             <View className="mx-4">
               <Text className="font-bold text-4xl mb-4">EchoJournal</Text>
-              <View className="flex-row gap-2 mb-8 items-center">
+              <View className="flex-row gap-2 mb-6 items-center">
                 <Chip
                   text={selectedMood ? selectedMood.capitalize() : "All Moods"}
                   onPress={() => setMoodOpen((prev) => !prev)}
@@ -131,14 +230,31 @@ export default function Index() {
               </View>
             </View>
           )}
-          renderItem={(item) => (
-            <EntryCard
-              title={item.item.title}
-              description={item.item.description}
-              mood={item.item.mood}
-              topics={item.item.topics?.map((i) => i)}
-            />
-          )}
+          renderItem={({ item }) => {
+            if (item.type === "header") {
+              return (
+                <View className="px-4 pb-2 bg-inverse-on-surface mb-2">
+                  <Text className="text-on-surface-variant font-semibold text-md">
+                    {item.date === today.toLocaleDateString()
+                      ? "TODAY"
+                      : item.date === yesterday()
+                        ? "YESTERDAY"
+                        : item.date}
+                  </Text>
+                </View>
+              );
+            }
+
+            return (
+              <EntryCard
+                title={item.entry.title}
+                description={item.entry.description}
+                mood={item.entry.mood}
+                topics={item.entry.topics?.map((i) => i)}
+                date={item.entry.date}
+              />
+            );
+          }}
         />
 
         {moodOpen && (
@@ -161,7 +277,10 @@ export default function Index() {
 
         <TouchableOpacity
           className="absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"
-          onPress={() => setOpenSheet(true)}
+          onPress={() => {
+            record();
+            setOpenSheet(true);
+          }}
         >
           <Ionicons name="add" size={32} color="white" />
         </TouchableOpacity>
@@ -172,12 +291,12 @@ export default function Index() {
           <BottomSheet.Overlay />
           <BottomSheet.Content>
             <BottomSheet.Title className="font-semibold text-center text-2xl">
-              {recordingActive
+              {recorderState.isRecording
                 ? "Recording your memories..."
                 : "Recording paused"}
             </BottomSheet.Title>
             <BottomSheet.Description className="text-center mt-1">
-              00:00:00
+              {recordingTime()}
             </BottomSheet.Description>
 
             <View className="flex-row mx-8 mb-8 gap-4 mt-8 items-center justify-between">
@@ -190,7 +309,7 @@ export default function Index() {
                 />
               </TouchableOpacity>
               <View className="relative items-center justify-center w-20 h-20">
-                {recordingActive && (
+                {recorderState.isRecording && (
                   <Animated.View
                     pointerEvents="none"
                     className="absolute w-20 h-20 rounded-full bg-[#1F70F5]"
@@ -202,23 +321,22 @@ export default function Index() {
                 )}
                 <TouchableOpacity
                   onPress={() => {
+                    stopRecording();
                     setOpenSheet(false);
                     router.push("/create");
                   }}
                 >
                   <Ionicons
-                    name={recordingActive ? "checkmark" : "mic"}
+                    name={recorderState.isRecording ? "checkmark" : "mic"}
                     size={44}
                     color="white"
                     className="bg-primary-container rounded-full p-4"
                   />
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => setRecordingActive((prev) => !prev)}
-              >
+              <TouchableOpacity onPress={() => stopRecording()}>
                 <Ionicons
-                  name={recordingActive ? "pause" : "play"}
+                  name={recorderState.isRecording ? "pause" : "play"}
                   size={32}
                   color="#00419c"
                   className="bg-inverse-on-surface rounded-full p-2"
