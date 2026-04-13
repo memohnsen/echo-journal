@@ -12,6 +12,10 @@ import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { fetch as expoFetch } from "expo/fetch";
+import { generateAPIUrl } from "../utils/apiUrl";
 
 const Create = () => {
   const { duration } = useLocalSearchParams();
@@ -42,7 +46,6 @@ const Create = () => {
 
     const itemObject = JSON.stringify(item);
     storage.set(`${title}-${new Date().toLocaleDateString()}`, itemObject);
-    console.log("save successful");
   };
 
   const getImageByMood = () => {
@@ -50,9 +53,20 @@ const Create = () => {
     return mood.map((item) => item.image);
   };
 
+  const { messages, error, sendMessage } = useChat({
+    transport: new DefaultChatTransport({
+      fetch: expoFetch as unknown as typeof globalThis.fetch,
+      api: generateAPIUrl("/api/chat"),
+    }),
+    onFinish: () => setGeneratingSummary(false),
+    onError: () => setGeneratingSummary(false),
+  });
+
   const generateSummary = () => {
-    setGeneratingSummary((prev) => !prev);
-    return;
+    setGeneratingSummary(true);
+    sendMessage({
+      text: "Summarize this journal entry in 2–3 short sentences.",
+    });
   };
 
   const handlePlayback = () => {
@@ -156,6 +170,30 @@ const Create = () => {
             </Text>
           </View>
         )}
+
+        {error ? (
+          <Text className="text-red-600 mt-4">{error.message}</Text>
+        ) : null}
+
+        {messages
+          .filter((m) => m.role === "assistant")
+          .slice(-1)
+          .map((m) => (
+            <View key={m.id} className="mt-4 mx-2">
+              {m.parts.map((part, i) => {
+                switch (part.type) {
+                  case "text":
+                    return (
+                      <Text key={`${m.id}-${i}`} className="text-on-surface">
+                        {part.text}
+                      </Text>
+                    );
+                  default:
+                    return null;
+                }
+              })}
+            </View>
+          ))}
       </View>
 
       <View className="absolute mx-2 bottom-8 w-full flex-row gap-4">
