@@ -14,6 +14,7 @@ import {
 interface ChipProps {
   text: string;
   onPress: () => void;
+  onLongPress?: () => void;
   variant: "outline" | "filled" | "selected";
   clearFilter?: () => void;
   selectedMood?: string;
@@ -24,6 +25,7 @@ interface ChipProps {
 const Chip = ({
   text,
   onPress,
+  onLongPress,
   variant,
   clearFilter,
   selectedMood,
@@ -94,6 +96,7 @@ const Chip = ({
           },
         ]}
         onPress={onPress}
+        onLongPress={onLongPress}
       >
         {selectedMood || selectedTopic ? (
           <View className="flex-row items-center">

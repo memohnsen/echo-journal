@@ -7,7 +7,14 @@ import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
 import { BottomSheet, Input, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
-import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Settings = () => {
   const [selectedMood, setSelectedMood] = useState<Mood>("other");
@@ -27,11 +34,42 @@ const Settings = () => {
   };
 
   const saveNewTopics = () => {
-    setTopics((prev) => [...prev, topicName]);
-    const topicsArr = JSON.stringify(topics);
-    storage.set("topicOptions", topicsArr);
-
+    const name = topicName.trim();
+    if (!name) {
+      return;
+    }
+    setTopics((prev) => {
+      const next = [...(prev ?? []), name];
+      storage.set("topicOptions", JSON.stringify(next));
+      return next;
+    });
+    setTopicName("");
     setOpenSheet(false);
+  };
+
+  const longPressAlert = (item: string) => {
+    Alert.alert("Do you want to delete this topic?", "This cannot be undone.", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "Delete", onPress: () => deleteTopic(item) },
+    ]);
+  };
+
+  const deleteTopic = (item: string) => {
+    if (storage.getString("defaultTopic") === item) {
+      storage.set("defaultTopic", "");
+    }
+    setTopics((prev) => {
+      const next = (prev ?? []).filter((p) => p !== item);
+      storage.set("topicOptions", JSON.stringify(next));
+      return next;
+    });
+    setSelectedTopic((current) => (current === item ? "" : current));
+
+    Alert.alert(`${item.capitalize()} has been deleted`);
   };
 
   useEffect(() => {
@@ -99,7 +137,8 @@ const Settings = () => {
         <View className="bg-white py-4 rounded-2xl mt-4">
           <Text className="font-semibold text-lg mb-2 mx-4">My Topics</Text>
           <Text className="text-on-surface-variant text-md mx-4">
-            Select default topic to apply to all new entries
+            Select default topic to apply to all new entries or long press to
+            delete a topic
           </Text>
           <ScrollView
             horizontal
@@ -116,6 +155,7 @@ const Settings = () => {
                       setSelectedTopic((prev) => (prev === topic ? "" : topic));
                       setDefaultStorage(topic, "defaultTopic");
                     }}
+                    onLongPress={() => longPressAlert(topic)}
                     variant={
                       selectedTopic.includes(topic) ? "selected" : "filled"
                     }
