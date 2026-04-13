@@ -9,7 +9,8 @@
 -[x] pausing of playback on index
 -[x] add edit / delete entry
 -[x] ai transcript
--[ ] let user add own topics
+-[x] let user add own topics
+-[ ] long press to delete saved topics
 -[ ] testing - unit and maestro
 -[ ] improve ui
 -[ ] animations

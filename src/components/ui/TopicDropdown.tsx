@@ -23,7 +23,7 @@ const TopicDropdown = ({
       transparent={true}
       presentationStyle="overFullScreen"
     >
-      <View className="flex-1 items-center pt-52">
+      <View className="flex-1 items-center pt-52 bg-black/20">
         <View className="items-start gap-4 bg-surface w-11/12 p-4 rounded-2xl shadow">
           {TOPICS.map((topic) => (
             <View key={topic} className="flex-row items-center gap-60">

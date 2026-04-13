@@ -71,7 +71,11 @@ const Create = () => {
     const first = lines[0] ?? "";
     const titleMatch = first.match(/^TITLE:\s*(.+)$/i);
     if (titleMatch) {
-      setTitle(titleMatch[1].trim().replace(/^\*+|\*+$/g, ""));
+      setTitle(
+        titleMatch[1]
+          ? titleMatch[1].trim().replace(/^\*+|\*+$/g, "")
+          : "New Entry",
+      );
       setDescription(lines.slice(1).join("\n").trim() || trimmed);
     } else {
       setDescription(trimmed);
@@ -188,7 +192,7 @@ ${sourceText}`
   };
 
   useEffect(() => {
-    const defaultMood: Mood = storage.getString("defaultMood");
+    const defaultMood: Mood = storage.getString("defaultMood") as Mood;
     if (defaultMood) {
       setSelectedMood(defaultMood);
     }
