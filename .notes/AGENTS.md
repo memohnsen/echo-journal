@@ -1,5 +1,3 @@
-# Claude Code Rules
-
 ## Debugging & Problem Solving Style
 
 When the user asks for help with a bug or issue, **do not give the solution directly**. Instead:

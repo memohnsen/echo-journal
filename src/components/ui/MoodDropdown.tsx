@@ -27,7 +27,7 @@ const MoodDropdown = ({
       <View className="flex-1 items-center pt-52">
         <View className="items-start gap-4 bg-surface w-11/12 p-4 rounded-2xl shadow">
           {MOODS.map((mood) => (
-            <View className="flex-row items-center gap-60">
+            <View key={mood.mood} className="flex-row items-center gap-60">
               <TouchableOpacity
                 onPress={() => {
                   setSelectedMood((prev) =>

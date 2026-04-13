@@ -10,7 +10,13 @@ import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
@@ -27,6 +33,11 @@ const Create = () => {
 
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const [generatingSummary, setGeneratingSummary] = useState(false);
+  const [transcribing, setTranscribing] = useState(false);
+  const [transcriptionError, setTranscriptionError] = useState<string | null>(
+    null,
+  );
+  const [transcript, setTranscript] = useState<string | null>(null);
 
   const audioPath = storage.getString("tmpRecordingTitle");
 
@@ -42,6 +53,7 @@ const Create = () => {
       date: new Date().toLocaleDateString(),
       audioURI: audioPath,
       duration: duration,
+      transcript: transcript,
     };
 
     const itemObject = JSON.stringify(item);
@@ -53,19 +65,114 @@ const Create = () => {
     return mood.map((item) => item.image);
   };
 
-  const { messages, error, sendMessage } = useChat({
+  const applyTitleAndSummaryFromAssistant = (text: string) => {
+    const trimmed = text.trim();
+    const lines = trimmed.split(/\r?\n/);
+    const first = lines[0] ?? "";
+    const titleMatch = first.match(/^TITLE:\s*(.+)$/i);
+    if (titleMatch) {
+      setTitle(titleMatch[1].trim().replace(/^\*+|\*+$/g, ""));
+      setDescription(lines.slice(1).join("\n").trim() || trimmed);
+    } else {
+      setDescription(trimmed);
+    }
+  };
+
+  const { sendMessage } = useChat({
     transport: new DefaultChatTransport({
       fetch: expoFetch as unknown as typeof globalThis.fetch,
       api: generateAPIUrl("/api/chat"),
     }),
-    onFinish: () => setGeneratingSummary(false),
+    onFinish: ({ message }) => {
+      setGeneratingSummary(false);
+      if (message.role !== "assistant") {
+        return;
+      }
+      const text = message.parts
+        .filter((p): p is { type: "text"; text: string } => p.type === "text")
+        .map((p) => p.text)
+        .join("");
+      applyTitleAndSummaryFromAssistant(text);
+    },
     onError: () => setGeneratingSummary(false),
   });
 
-  const generateSummary = () => {
+  const runTranscription = async (): Promise<
+    { ok: true; text: string } | { ok: false }
+  > => {
+    if (!audioPath) {
+      return { ok: true, text: "" };
+    }
+    setTranscriptionError(null);
+    setTranscribing(true);
+    try {
+      const formData = new FormData();
+      const name = audioPath.split("/").pop()?.split("?")[0] ?? "recording.m4a";
+      const ext = name.includes(".")
+        ? name.split(".").pop()?.toLowerCase()
+        : "";
+      const mime =
+        ext === "caf"
+          ? "audio/x-caf"
+          : ext === "wav"
+            ? "audio/wav"
+            : ext === "mp3"
+              ? "audio/mpeg"
+              : "audio/m4a";
+      formData.append("audio", {
+        uri: audioPath,
+        name,
+        type: mime,
+      } as unknown as Blob);
+
+      const res = await fetch(generateAPIUrl("/api/transcribe"), {
+        method: "POST",
+        body: formData,
+      });
+
+      const raw = await res.text();
+      if (!res.ok) {
+        throw new Error(raw || res.statusText);
+      }
+
+      const data = JSON.parse(raw) as { text?: string };
+      const text = data.text ?? "";
+      setTranscript(text);
+      return { ok: true, text };
+    } catch (e) {
+      setTranscriptionError(
+        e instanceof Error ? e.message : "Transcription failed",
+      );
+      return { ok: false };
+    } finally {
+      setTranscribing(false);
+    }
+  };
+
+  const onBrainPress = async () => {
+    let sourceText = (transcript ?? "").trim() || description.trim();
+
+    if (audioPath && transcript === null) {
+      const tx = await runTranscription();
+      if (!tx.ok) {
+        return;
+      }
+      sourceText = tx.text.trim() || sourceText;
+    }
+
     setGeneratingSummary(true);
     sendMessage({
-      text: "Summarize this journal entry in 2–3 short sentences.",
+      text: sourceText
+        ? `Read the journal text below. Reply in plain text only.
+
+First line must be exactly in this format (including the word TITLE):
+TITLE: <a short title under 12 words>
+
+Then one blank line, then a 2–3 sentence summary of the entry.
+
+Journal text:
+${sourceText}`
+        : `Reply with TITLE: <short title> on the first line, a blank line, then a brief generic journal summary.`,
     });
   };
 
@@ -94,7 +201,7 @@ const Create = () => {
 
   return (
     <>
-      <View className="flex-1 bg-background pt-36 mx-4">
+      <ScrollView className="flex-1 bg-inverse-on-surface pt-36 mx-4">
         <View className="flex-row items-center">
           <TouchableOpacity
             className="pr-2"
@@ -133,7 +240,8 @@ const Create = () => {
             onPress={() => handlePlayback()}
           />
           <TouchableOpacity
-            onPress={() => generateSummary()}
+            onPress={() => void onBrainPress()}
+            disabled={transcribing || generatingSummary}
             className="bg-white rounded-full p-2 shadow ml-2"
           >
             <MaterialCommunityIcons
@@ -156,45 +264,46 @@ const Create = () => {
         <TextField>
           <TextArea
             className="mt-4"
-            placeholder="Add Description"
+            placeholder="Add Description or press the brain for an AI summary"
             value={description}
             onChangeText={setDescription}
+            editable={!transcribing && !generatingSummary}
           />
         </TextField>
+
+        {(transcript ?? "").length > 0 ? (
+          <View className="mt-6">
+            <Text className="text-on-surface-variant text-sm font-semibold mb-1">
+              Transcript
+            </Text>
+            <Text className="text-on-surface text-base leading-6">
+              {transcript}
+            </Text>
+          </View>
+        ) : null}
+
+        {transcribing && (
+          <View className="flex-row items-center mt-2">
+            <ActivityIndicator />
+            <Text className="text-on-surface-variant ml-2">
+              Transcribing audio…
+            </Text>
+          </View>
+        )}
+
+        {transcriptionError ? (
+          <Text className="text-red-600 mt-2">{transcriptionError}</Text>
+        ) : null}
 
         {generatingSummary && (
           <View className="flex-row items-center justify-center mt-8">
             <ActivityIndicator />
             <Text className="text-black ml-4 text-lg font-semibold">
-              Generating AI Summary
+              Generating title and summary
             </Text>
           </View>
         )}
-
-        {error ? (
-          <Text className="text-red-600 mt-4">{error.message}</Text>
-        ) : null}
-
-        {messages
-          .filter((m) => m.role === "assistant")
-          .slice(-1)
-          .map((m) => (
-            <View key={m.id} className="mt-4 mx-2">
-              {m.parts.map((part, i) => {
-                switch (part.type) {
-                  case "text":
-                    return (
-                      <Text key={`${m.id}-${i}`} className="text-on-surface">
-                        {part.text}
-                      </Text>
-                    );
-                  default:
-                    return null;
-                }
-              })}
-            </View>
-          ))}
-      </View>
+      </ScrollView>
 
       <View className="absolute mx-2 bottom-8 w-full flex-row gap-4">
         <TouchableOpacity

@@ -21,6 +21,7 @@ const EditEntry = () => {
   const [topics, setTopics] = useState("");
   const [selectedMood, setSelectedMood] = useState<Mood>("other");
   const [audioURI, setAudioURI] = useState("");
+  const [transcript, setTranscript] = useState("");
 
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const [generatingSummary, setGeneratingSummary] = useState(false);
@@ -37,6 +38,7 @@ const EditEntry = () => {
       date: date,
       audioURI: audioURI,
       duration: recordingTimeSeconds(status.duration),
+      transcript: transcript,
     };
 
     const itemObject = JSON.stringify(item);
@@ -74,6 +76,7 @@ const EditEntry = () => {
       setSelectedMood(object.mood);
       setTopics(object.topics);
       setAudioURI(object.audioURI);
+      setTranscript(object.transcript);
     } else {
       console.log("no mmkv data found");
     }
@@ -87,7 +90,7 @@ const EditEntry = () => {
     <>
       <Stack.Screen
         options={{
-          headerTitle: title,
+          headerTitle: date,
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
@@ -100,7 +103,7 @@ const EditEntry = () => {
           ),
         }}
       />
-      <View className="flex-1 bg-background pt-36 mx-4">
+      <View className="flex-1 bg-inverse-on-surface pt-36 mx-4">
         <View className="flex-row items-center">
           <TouchableOpacity
             className="pr-2"
@@ -138,16 +141,6 @@ const EditEntry = () => {
             isPlaying={status.playing}
             onPress={() => handlePlayback()}
           />
-          <TouchableOpacity
-            onPress={() => generateSummary()}
-            className="bg-white rounded-full p-2 shadow ml-2"
-          >
-            <MaterialCommunityIcons
-              name="brain"
-              size={28}
-              color={buttonStyling(selectedMood)}
-            />
-          </TouchableOpacity>
         </View>
         <View className="flex-row mt-4 gap-2">
           {TOPICS.map((topic) => (
@@ -168,14 +161,16 @@ const EditEntry = () => {
           />
         </TextField>
 
-        {generatingSummary && (
-          <View className="flex-row items-center justify-center mt-8">
-            <ActivityIndicator />
-            <Text className="text-black ml-4 text-lg font-semibold">
-              Generating AI Summary
+        {(transcript ?? "").length > 0 ? (
+          <View className="mt-6">
+            <Text className="text-on-surface-variant text-sm font-semibold mb-1">
+              Transcript
+            </Text>
+            <Text className="text-on-surface text-base leading-6">
+              {transcript}
             </Text>
           </View>
-        )}
+        ) : null}
       </View>
 
       <View className="absolute mx-2 bottom-8 w-full flex-row gap-4">

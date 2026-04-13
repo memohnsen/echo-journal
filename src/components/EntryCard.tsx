@@ -54,7 +54,9 @@ const EntryCard = ({
         style={{ width: 32, height: 32, marginLeft: 4 }}
       />
       <View className="bg-surface w-5/6 rounded-2xl p-4 ml-4 shadow">
-        <Text className="font-bold text-xl">{title}</Text>
+        <Text className="font-bold text-xl" numberOfLines={1}>
+          {title}
+        </Text>
         <Waveform
           mood={mood}
           currentTime={recordingTimeSeconds(status.currentTime)}
@@ -64,7 +66,9 @@ const EntryCard = ({
           onPress={() => handlePlayback()}
         />
         {description && (
-          <Text className="text-on-surface-variant text-md">{description}</Text>
+          <Text className="text-on-surface-variant text-md" numberOfLines={2}>
+            {description}
+          </Text>
         )}
         {topics && (
           <View className="flex-row gap-2 pt-2">

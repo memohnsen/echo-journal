@@ -1,3 +1,15 @@
+/**
+ * Builds absolute URLs for Expo Router API routes (`/api/chat`, `/api/transcribe`, …) from the React Native app. The dev server serves both the bundle and `+api` routes on one origin; this file figures out that origin in dev so `fetch` hits the right host (device/simulator, not `localhost` blindly).
+ *
+ * `generateAPIUrl("/api/chat")` → e.g. `http://192.168.1.10:8081/api/chat`
+ *
+ * Development resolution order:
+ * 1. `EXPO_PUBLIC_API_BASE_URL` if set (recommended for real devices)
+ * 2. `Constants.experienceUrl` (Expo Go), `exp://` rewritten to `http://`
+ * 3. `Constants.expoConfig?.hostUri` (Metro host), with `http://` added if missing
+ *
+ * Production / non-development builds require `EXPO_PUBLIC_API_BASE_URL` to your deployed API origin.
+ */
 import Constants from "expo-constants";
 
 function stripTrailingSlash(url: string): string {

@@ -6,6 +6,7 @@ export interface Entry {
   date: string;
   audioURI?: string;
   duration?: string;
+  transcript?: string;
 }
 
 export type Mood =

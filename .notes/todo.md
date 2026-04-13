@@ -8,7 +8,9 @@
 -[x] animation for wave forms playing
 -[x] pausing of playback on index
 -[x] add edit / delete entry
--[ ] ai transcript
+-[x] ai transcript
 -[ ] let user add own topics
 -[ ] testing - unit and maestro
+-[ ] improve ui
+-[ ] animations
 -[ ] accessibility
