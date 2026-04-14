@@ -12,6 +12,7 @@
 -[x] let user add own topics
 -[x] long press to delete saved topics
 -[x] accessibility
+-[x] list empty component
 -[ ] testing - unit and maestro
 -[ ] error in pause and play
 -[ ] search by title

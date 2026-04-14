@@ -18,6 +18,7 @@ import { BottomSheet } from "heroui-native";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
 import { recordingTimeMs } from "../utils/formatTime";
+import { Image } from "expo-image";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -195,8 +196,16 @@ export default function Index() {
           }}
           onRefresh={() => syncStorageToState()}
           ListHeaderComponent={() => (
-            <View className="mx-4">
-              <Text className="font-bold text-4xl mb-4">EchoJournal</Text>
+            <View className="mx-4" testID="home-screen">
+              <Text
+                testID="home-title"
+                accessible={true}
+                accessibilityLabel="EchoJournal"
+                accessibilityRole="header"
+                className="font-bold text-4xl mb-4"
+              >
+                EchoJournal
+              </Text>
               <View className="flex-row gap-2 mb-6 items-center">
                 <Chip
                   text={selectedMood ? selectedMood.capitalize() : "All Moods"}
@@ -254,6 +263,17 @@ export default function Index() {
               />
             );
           }}
+          ListEmptyComponent={() => (
+            <View className="flex-1 items-center justify-center mt-40">
+              <Image
+                source={require("@/src/assets/images/sad.svg")}
+                style={{ width: 100, height: 100 }}
+              />
+              <Text className="text-lg text-center px-12 mt-8">
+                No journal entries yet, click the button below to get started!
+              </Text>
+            </View>
+          )}
         />
 
         {moodOpen && (
@@ -288,15 +308,21 @@ export default function Index() {
           className="absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"
           testID="start-recording-button"
           accessible={true}
-          accessibilityLabel="Start recording"
-          accessibilityHint="Begins recording your journal entry"
+          accessibilityLabel="Plus"
+          accessibilityHint="Start a new voice journal entry"
           accessibilityRole="button"
           onPress={() => {
             record();
             setOpenSheet(true);
           }}
         >
-          <Ionicons name="add" size={32} color="white" />
+          <Ionicons
+            name="add"
+            size={32}
+            color="white"
+            accessible={false}
+            importantForAccessibility="no"
+          />
         </TouchableOpacity>
       </View>
 

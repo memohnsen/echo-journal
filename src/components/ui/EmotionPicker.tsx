@@ -1,5 +1,6 @@
 import { MOODS } from "@/src/constants/entries";
 import { Mood } from "@/src/types/entry";
+import "@/src/utils/capitalize";
 import { Image } from "expo-image";
 import { AccessibilityRole, Text, TouchableOpacity, View } from "react-native";
 
@@ -8,7 +9,6 @@ interface EmotionPickerProps {
   setSelectedMood: React.Dispatch<React.SetStateAction<Mood>>;
   testID?: string;
   accessible?: boolean;
-  accessibilityLabel?: string;
   accessibilityHint?: string;
   accessibilityRole?: AccessibilityRole;
 }
@@ -17,7 +17,6 @@ const EmotionPicker = ({
   selectedMood,
   setSelectedMood,
   accessibilityHint,
-  accessibilityLabel,
   accessibilityRole,
   accessible,
   testID,
@@ -33,9 +32,9 @@ const EmotionPicker = ({
             );
           }}
           className="items-center gap-2"
-          testID={testID}
+          testID={testID ? `${testID}-${mood.mood}` : `emotion-${mood.mood}`}
           accessible={accessible}
-          accessibilityLabel={accessibilityLabel}
+          accessibilityLabel={mood.mood.capitalize()}
           accessibilityHint={accessibilityHint}
           accessibilityRole={accessibilityRole}
         >

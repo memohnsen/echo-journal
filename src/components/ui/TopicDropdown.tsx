@@ -1,7 +1,13 @@
 import { TOPICS } from "@/src/constants/entries";
 import "@/src/utils/capitalize";
 import { Ionicons } from "@expo/vector-icons";
-import { AccessibilityRole, Modal, Text, TouchableOpacity, View } from "react-native";
+import {
+  AccessibilityRole,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface TopicDropdownProps {
   visible: boolean;
@@ -19,7 +25,12 @@ const TopicDropdown = ({
   visible,
   setTopicOpen,
   setSelectedTopic,
-  selectedTopic,, accessibilityHint, accessibilityLabel, accessibilityRole, accessible, testID
+  selectedTopic,
+  accessibilityHint,
+  accessibilityLabel,
+  accessibilityRole,
+  accessible,
+  testID,
 }: TopicDropdownProps) => {
   return (
     <Modal

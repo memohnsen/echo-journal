@@ -282,9 +282,9 @@ ${sourceText}`
               key={topic}
               onPress={() => setTopics((prev) => (prev === topic ? "" : topic))}
               variant={topics === topic ? "selected" : "outline"}
-              testID="topic-chip"
+              testID={`topic-chip-${topic}`}
               accessible={true}
-              accessibilityLabel="Select your topic"
+              accessibilityLabel={topic.capitalize()}
               accessibilityHint="Select your topic for your journal entry"
               accessibilityRole="button"
             />
@@ -358,6 +358,11 @@ ${sourceText}`
             router.back();
           }}
           className="items-center justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-4 rounded-full"
+          testID="save-button"
+          accessible={true}
+          accessibilityLabel="Save entry"
+          accessibilityHint="Save your journal entry"
+          accessibilityRole="button"
         >
           <Text className="text-white font-semibold text-lg">Save</Text>
         </TouchableOpacity>
@@ -375,7 +380,6 @@ ${sourceText}`
               setSelectedMood={setSelectedMood}
               testID="emotion-picker-button"
               accessible={true}
-              accessibilityLabel="Select your mood"
               accessibilityHint="Select your mood for your journal entry"
               accessibilityRole="button"
             />

@@ -245,7 +245,6 @@ const EditEntry = () => {
               setSelectedMood={setSelectedMood}
               testID="emotion-picker-button"
               accessible={true}
-              accessibilityLabel="Select your mood"
               accessibilityHint="Select your mood for your journal entry"
               accessibilityRole="button"
             />

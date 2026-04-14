@@ -2,30 +2,42 @@ appId: com.memohnsen.echojournal
 ---
 - launchApp:
     clearState: true
-- tapOn:
-    id: "start-recording-button"
 - waitForAnimationToEnd:
-    timeout: 5000
+    timeout: 12000
 - tapOn:
-    id: "pause-recording-button"
+    point: "87%,90%"
+    retryTapIfNoChange: true
+- waitForAnimationToEnd:
+    timeout: 4000
+- tapOn:
+    point: "82%,79%"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn:
+    point: "50%,79%"
+- extendedWaitUntil:
+    visible: "Add title"
+    timeout: 20000
 - waitForAnimationToEnd:
     timeout: 2000
 - tapOn:
-    id: "pause-recording-button"
-- waitForAnimationToEnd:
-    timeout: 2000
-- tapOn:
-    id: "finish-recording-button"
-- tapOn: "Add Title"
+    text: "Add title"
 - inputText: "New Journal Entry"
-- tapOn: "Work"
-- tapOn: "Add Description"
+- tapOn:
+    id: "topic-chip-work"
+- tapOn:
+    text: "Add description"
 - inputText: "New journal entry for today"
 - tapOn:
-    id: "mood-selector"
-- tapOn: "Neutral"
-- tapOn: "Confirm"
-- tapOn: "Save"
+    text: "Select Mood"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: "emotion-picker-button-neutral"
+- tapOn:
+    text: "Confirm"
+- tapOn:
+    text: "Save entry"
 - swipe:
     start: 50%, 20%
     end: 50%, 80%
