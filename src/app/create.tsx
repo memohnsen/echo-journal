@@ -209,6 +209,11 @@ ${sourceText}`
         <View className="flex-row items-center">
           <TouchableOpacity
             className="pr-2"
+            testID="mood-selector"
+            accessibilityLabel="Select Mood"
+            accessible={true}
+            accessibilityHint="Opens a bottom sheet to select your mood for the entry"
+            accessibilityRole="button"
             onPress={() => setOpenBottomSheet(true)}
           >
             {selectedMood !== "other" ? (
@@ -230,6 +235,11 @@ ${sourceText}`
               placeholder="Add Title..."
               value={title}
               onChangeText={setTitle}
+              testID="title-text-field"
+              accessible={true}
+              accessibilityLabel="Add title"
+              accessibilityHint="Add a title to your journal entry"
+              accessibilityRole="search"
             />
           </TextField>
         </View>
@@ -242,11 +252,21 @@ ${sourceText}`
             progress={audioProgress(status.currentTime, status.duration)}
             isPlaying={status.playing}
             onPress={() => handlePlayback()}
+            testID="waveform-button"
+            accessible={true}
+            accessibilityLabel="Play audio"
+            accessibilityHint="Play the audio from your journal entry"
+            accessibilityRole="button"
           />
           <TouchableOpacity
             onPress={() => void onBrainPress()}
             disabled={transcribing || generatingSummary}
             className="bg-white rounded-full p-2 shadow ml-2"
+            testID="generate-button"
+            accessible={true}
+            accessibilityLabel="AI generate entry"
+            accessibilityHint="Use AI to transcribe your journal entry and autofill a title, description, and transcript for your journal entry"
+            accessibilityRole="button"
           >
             <MaterialCommunityIcons
               name="brain"
@@ -262,10 +282,21 @@ ${sourceText}`
               key={topic}
               onPress={() => setTopics((prev) => (prev === topic ? "" : topic))}
               variant={topics === topic ? "selected" : "outline"}
+              testID="topic-chip"
+              accessible={true}
+              accessibilityLabel="Select your topic"
+              accessibilityHint="Select your topic for your journal entry"
+              accessibilityRole="button"
             />
           ))}
         </View>
-        <TextField>
+        <TextField
+          testID="description-text-field"
+          accessible={true}
+          accessibilityLabel="Add description"
+          accessibilityHint="Add a description for your journal entry"
+          accessibilityRole="search"
+        >
           <TextArea
             className="mt-4"
             placeholder="Add Description or press the brain for an AI summary"
@@ -313,6 +344,11 @@ ${sourceText}`
         <TouchableOpacity
           onPress={() => router.back()}
           className="items-center justify-center w-1/4 bg-on-primary-container p-4 rounded-full"
+          testID="cancel-button"
+          accessible={true}
+          accessibilityLabel="Cancel recording"
+          accessibilityHint="Go back and cancel saving your journal entry"
+          accessibilityRole="button"
         >
           <Text className="text-primary font-semibold text-lg">Cancel</Text>
         </TouchableOpacity>
@@ -337,6 +373,11 @@ ${sourceText}`
             <EmotionPicker
               selectedMood={selectedMood}
               setSelectedMood={setSelectedMood}
+              testID="emotion-picker-button"
+              accessible={true}
+              accessibilityLabel="Select your mood"
+              accessibilityHint="Select your mood for your journal entry"
+              accessibilityRole="button"
             />
 
             <View className="flex-row mx-2 w-full gap-4 mt-8">
@@ -346,6 +387,11 @@ ${sourceText}`
                   setOpenBottomSheet(false);
                 }}
                 className="items-center justify-center w-1/4 bg-on-primary-container p-3 rounded-full"
+                testID="cancel-button"
+                accessible={true}
+                accessibilityLabel="Cancel recording"
+                accessibilityHint="Go back and cancel saving your journal entry"
+                accessibilityRole="button"
               >
                 <Text className="text-primary font-semibold text-lg">
                   Cancel
@@ -354,6 +400,11 @@ ${sourceText}`
               <TouchableOpacity
                 onPress={() => setOpenBottomSheet(false)}
                 className="items-center flex-row justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-3 rounded-full"
+                testID="confirm-button"
+                accessible={true}
+                accessibilityLabel="Save recording"
+                accessibilityHint="Save your journal entry"
+                accessibilityRole="button"
               >
                 <Ionicons name="checkmark" size={20} color="white" />
                 <Text className="text-white font-semibold text-lg">

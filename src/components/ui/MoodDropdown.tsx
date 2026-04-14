@@ -2,13 +2,24 @@ import { MOODS } from "@/src/constants/entries";
 import "@/src/utils/capitalize";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import {
+  AccessibilityRole,
+  Modal,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface MoodDropdownProps {
   visible: boolean;
   setMoodOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedMood: React.Dispatch<React.SetStateAction<string>>;
   selectedMood: string;
+  testID?: string;
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
 }
 
 const MoodDropdown = ({
@@ -16,6 +27,11 @@ const MoodDropdown = ({
   setMoodOpen,
   setSelectedMood,
   selectedMood,
+  accessibilityHint,
+  accessibilityLabel,
+  accessibilityRole,
+  accessible,
+  testID,
 }: MoodDropdownProps) => {
   return (
     <Modal
@@ -36,6 +52,11 @@ const MoodDropdown = ({
                   setMoodOpen(false);
                 }}
                 className="flex-row items-center"
+                testID={testID}
+                accessible={accessible}
+                accessibilityLabel={accessibilityLabel}
+                accessibilityHint={accessibilityHint}
+                accessibilityRole={accessibilityRole}
               >
                 <Image
                   source={mood.image}

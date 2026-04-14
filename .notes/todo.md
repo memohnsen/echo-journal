@@ -10,8 +10,14 @@
 -[x] add edit / delete entry
 -[x] ai transcript
 -[x] let user add own topics
--[ ] long press to delete saved topics
+-[x] long press to delete saved topics
+-[x] accessibility
 -[ ] testing - unit and maestro
+-[ ] error in pause and play
+-[ ] search by title
+-[ ] filter by date
+-[ ] ai chat with notes
+-[ ] record by long press and drag to left to delete
+-[ ] biometrics and face id lock notes
 -[ ] improve ui
 -[ ] animations
--[ ] accessibility

@@ -48,6 +48,11 @@ const EntryCard = ({
         });
       }}
       className="flex-row mx-4 mb-4"
+      testID="entry-card"
+      accessible={true}
+      accessibilityLabel="Edit your entry"
+      accessibilityHint="Edit the contents of a specific journal entry"
+      accessibilityRole="button"
     >
       <Image
         source={getImageByMood()}
@@ -64,6 +69,11 @@ const EntryCard = ({
           progress={audioProgress(status.currentTime, status.duration)}
           isPlaying={status.playing}
           onPress={() => handlePlayback()}
+          testID="waveform-button"
+          accessible={true}
+          accessibilityLabel="Play audio"
+          accessibilityHint="Play the audio from your journal entry"
+          accessibilityRole="button"
         />
         {description && (
           <Text className="text-on-surface-variant text-md" numberOfLines={2}>
@@ -77,6 +87,11 @@ const EntryCard = ({
                 onPress={() => {}}
                 variant="filled"
                 text={`# ${topics.capitalize()}`}
+                testID="topic-chip"
+                accessible={true}
+                accessibilityLabel="Entry topic"
+                accessibilityHint="Displays your topic for the journal entry"
+                accessibilityRole="button"
               />
             )}
           </View>

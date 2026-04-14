@@ -1,20 +1,25 @@
 import { TOPICS } from "@/src/constants/entries";
 import "@/src/utils/capitalize";
 import { Ionicons } from "@expo/vector-icons";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
+import { AccessibilityRole, Modal, Text, TouchableOpacity, View } from "react-native";
 
 interface TopicDropdownProps {
   visible: boolean;
   setTopicOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedTopic: React.Dispatch<React.SetStateAction<string>>;
   selectedTopic: string;
+  testID?: string;
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
 }
 
 const TopicDropdown = ({
   visible,
   setTopicOpen,
   setSelectedTopic,
-  selectedTopic,
+  selectedTopic,, accessibilityHint, accessibilityLabel, accessibilityRole, accessible, testID
 }: TopicDropdownProps) => {
   return (
     <Modal
@@ -33,6 +38,11 @@ const TopicDropdown = ({
                   setTopicOpen(false);
                 }}
                 className="flex-row items-center"
+                testID={testID}
+                accessible={accessible}
+                accessibilityLabel={accessibilityLabel}
+                accessibilityHint={accessibilityHint}
+                accessibilityRole={accessibilityRole}
               >
                 <Text className="mr-4">#</Text>
                 <Text>{topic.capitalize()}</Text>

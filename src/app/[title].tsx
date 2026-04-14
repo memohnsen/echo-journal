@@ -97,6 +97,11 @@ const EditEntry = () => {
                 storage.remove(`${title}-${date}`);
                 router.back();
               }}
+              testID="delete-entry-button"
+              accessible={true}
+              accessibilityLabel="Delete your entry"
+              accessibilityHint="Delete your journal entry"
+              accessibilityRole="button"
             >
               <Ionicons name="trash" size={20} color="red" />
             </TouchableOpacity>
@@ -108,6 +113,11 @@ const EditEntry = () => {
           <TouchableOpacity
             className="pr-2"
             onPress={() => setOpenBottomSheet(true)}
+            testID="select-mood-button"
+            accessible={true}
+            accessibilityLabel="Select mood"
+            accessibilityHint="Opens a bottom sheet to select your mood for the journal entry"
+            accessibilityRole="button"
           >
             {selectedMood !== "other" ? (
               <Image
@@ -123,7 +133,14 @@ const EditEntry = () => {
               />
             )}
           </TouchableOpacity>
-          <TextField className="flex-1">
+          <TextField
+            className="flex-1"
+            testID="title-text-field"
+            accessible={true}
+            accessibilityLabel="Set title"
+            accessibilityHint="Enter the title of your journal entry"
+            accessibilityRole="search"
+          >
             <Input
               placeholder="Add Title..."
               value={entryTitle}
@@ -140,6 +157,11 @@ const EditEntry = () => {
             progress={audioProgress(status.currentTime, status.duration)}
             isPlaying={status.playing}
             onPress={() => handlePlayback()}
+            testID="waveform-button"
+            accessible={true}
+            accessibilityLabel="Play audio"
+            accessibilityHint="Play the audio from your journal entry"
+            accessibilityRole="button"
           />
         </View>
         <View className="flex-row mt-4 gap-2">
@@ -149,6 +171,11 @@ const EditEntry = () => {
               key={topic}
               onPress={() => setTopics((prev) => (prev === topic ? "" : topic))}
               variant={topics === topic ? "selected" : "outline"}
+              testID="topic-chip"
+              accessible={true}
+              accessibilityLabel="Select your topic"
+              accessibilityHint="Select your topic for your journal entry"
+              accessibilityRole="button"
             />
           ))}
         </View>
@@ -158,6 +185,11 @@ const EditEntry = () => {
             placeholder="Add Description"
             value={description}
             onChangeText={setDescription}
+            testID="description-text-field"
+            accessible={true}
+            accessibilityLabel="Entry description"
+            accessibilityHint="Enter your description for the journal entry"
+            accessibilityRole="search"
           />
         </TextField>
 
@@ -177,6 +209,11 @@ const EditEntry = () => {
         <TouchableOpacity
           onPress={() => router.back()}
           className="items-center justify-center w-1/4 bg-on-primary-container p-4 rounded-full"
+          testID="cancel-entry-button"
+          accessible={true}
+          accessibilityLabel="Cancel entry"
+          accessibilityHint="Go back and cancel saving this entry"
+          accessibilityRole="button"
         >
           <Text className="text-primary font-semibold text-lg">Cancel</Text>
         </TouchableOpacity>
@@ -186,6 +223,11 @@ const EditEntry = () => {
             router.back();
           }}
           className="items-center justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-4 rounded-full"
+          testID="save-entry-button"
+          accessible={true}
+          accessibilityLabel="Save entry"
+          accessibilityHint="Save this journal entry"
+          accessibilityRole="button"
         >
           <Text className="text-white font-semibold text-lg">Save</Text>
         </TouchableOpacity>
@@ -201,6 +243,11 @@ const EditEntry = () => {
             <EmotionPicker
               selectedMood={selectedMood}
               setSelectedMood={setSelectedMood}
+              testID="emotion-picker-button"
+              accessible={true}
+              accessibilityLabel="Select your mood"
+              accessibilityHint="Select your mood for your journal entry"
+              accessibilityRole="button"
             />
 
             <View className="flex-row mx-2 w-full gap-4 mt-8">
@@ -210,6 +257,11 @@ const EditEntry = () => {
                   setOpenBottomSheet(false);
                 }}
                 className="items-center justify-center w-1/4 bg-on-primary-container p-3 rounded-full"
+                testID="cancel-mood-button"
+                accessible={true}
+                accessibilityLabel="Select mood"
+                accessibilityHint="Cancel selecting your mood for the entry"
+                accessibilityRole="button"
               >
                 <Text className="text-primary font-semibold text-lg">
                   Cancel
@@ -218,6 +270,11 @@ const EditEntry = () => {
               <TouchableOpacity
                 onPress={() => setOpenBottomSheet(false)}
                 className="items-center flex-row justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-3 rounded-full"
+                testID="confirm-mood-button"
+                accessible={true}
+                accessibilityLabel="Set mood"
+                accessibilityHint="Confirm setting the mood for your entry"
+                accessibilityRole="button"
               >
                 <Ionicons name="checkmark" size={20} color="white" />
                 <Text className="text-white font-semibold text-lg">

@@ -2,6 +2,7 @@ import { MOODS } from "@/src/constants/entries";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import {
+  AccessibilityRole,
   Pressable,
   StyleProp,
   Text,
@@ -20,6 +21,11 @@ interface ChipProps {
   selectedMood?: string;
   selectedTopic?: string;
   image?: boolean;
+  testID?: string;
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
 }
 
 const Chip = ({
@@ -31,6 +37,11 @@ const Chip = ({
   selectedMood,
   selectedTopic,
   image,
+  testID,
+  accessibilityHint,
+  accessibilityLabel,
+  accessibilityRole,
+  accessible,
 }: ChipProps) => {
   const getChipStyling = (): ViewStyle => {
     switch (variant) {
@@ -97,6 +108,11 @@ const Chip = ({
         ]}
         onPress={onPress}
         onLongPress={onLongPress}
+        testID={testID}
+        accessible={accessible}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
+        accessibilityRole={accessibilityRole}
       >
         {selectedMood || selectedTopic ? (
           <View className="flex-row items-center">

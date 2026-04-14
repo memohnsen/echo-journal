@@ -3,6 +3,7 @@ import { Mood } from "@/src/types/entry";
 import { Ionicons } from "@expo/vector-icons";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import {
+  AccessibilityRole,
   ColorValue,
   DimensionValue,
   StyleSheet,
@@ -29,6 +30,11 @@ interface WaveformProps {
   className?: string;
   progress: number;
   isPlaying: boolean;
+  testID?: string;
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
 }
 
 const Waveform = ({
@@ -39,6 +45,11 @@ const Waveform = ({
   className,
   progress,
   isPlaying,
+  accessibilityHint,
+  accessibilityLabel,
+  accessibilityRole,
+  accessible,
+  testID,
 }: WaveformProps) => {
   const { width: windowWidth } = useWindowDimensions();
   const [stripWidth, setStripWidth] = useState(0);
@@ -113,6 +124,11 @@ const Waveform = ({
       <TouchableOpacity
         onPress={onPress}
         className="bg-white shadow rounded-full p-2 mr-2"
+        testID={testID}
+        accessible={accessible}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
+        accessibilityRole={accessibilityRole}
       >
         <Ionicons
           name={isPlaying ? "pause" : "play"}

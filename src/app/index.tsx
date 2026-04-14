@@ -205,6 +205,11 @@ export default function Index() {
                   clearFilter={() => setSelectedMood("")}
                   selectedMood={selectedMood}
                   image={true}
+                  testID="mood-chip"
+                  accessible={true}
+                  accessibilityLabel="Select your mood"
+                  accessibilityHint="Filter journal entries by mood"
+                  accessibilityRole="button"
                 />
                 <Chip
                   text={
@@ -214,6 +219,11 @@ export default function Index() {
                   variant={selectedTopic ? "selected" : "outline"}
                   clearFilter={() => setSelectedTopic("")}
                   selectedTopic={selectedTopic}
+                  testID="topic-chip"
+                  accessible={true}
+                  accessibilityLabel="Select your topic"
+                  accessibilityHint="Filter journal entries by topic"
+                  accessibilityRole="button"
                 />
               </View>
             </View>
@@ -252,6 +262,11 @@ export default function Index() {
             setMoodOpen={setMoodOpen}
             setSelectedMood={setSelectedMood}
             selectedMood={selectedMood}
+            testID="mood-dropdown-button"
+            accessible={true}
+            accessibilityLabel="Open mood options"
+            accessibilityHint="Open the sheet to select and filter by a given mood"
+            accessibilityRole="button"
           />
         )}
 
@@ -261,11 +276,21 @@ export default function Index() {
             setTopicOpen={setTopicsOpen}
             setSelectedTopic={setSelectedTopic}
             selectedTopic={selectedTopic}
+            testID="topic-dropdown-button"
+            accessible={true}
+            accessibilityLabel="Open topic options"
+            accessibilityHint="Open the sheet to select and filter by a given topic"
+            accessibilityRole="button"
           />
         )}
 
         <TouchableOpacity
           className="absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"
+          testID="start-recording-button"
+          accessible={true}
+          accessibilityLabel="Start recording"
+          accessibilityHint="Begins recording your journal entry"
+          accessibilityRole="button"
           onPress={() => {
             record();
             setOpenSheet(true);
@@ -289,7 +314,14 @@ export default function Index() {
             </BottomSheet.Description>
 
             <View className="flex-row mx-8 mb-8 gap-4 mt-8 items-center justify-between">
-              <TouchableOpacity onPress={() => setOpenSheet(false)}>
+              <TouchableOpacity
+                testID="cancel-record-button"
+                accessibilityLabel="Cancel recording"
+                accessible={true}
+                accessibilityHint="Cancel recording your journal entry"
+                accessibilityRole="button"
+                onPress={() => setOpenSheet(false)}
+              >
                 <Ionicons
                   name="close"
                   size={32}
@@ -309,6 +341,11 @@ export default function Index() {
                   />
                 )}
                 <TouchableOpacity
+                  testID="finish-recording-button"
+                  accessibilityLabel="Finish recording"
+                  accessible={true}
+                  accessibilityHint="Finish recording your journal entry"
+                  accessibilityRole="button"
                   onPress={() => {
                     stopRecording();
                     setOpenSheet(false);
@@ -328,7 +365,14 @@ export default function Index() {
                   />
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity onPress={() => stopRecording()}>
+              <TouchableOpacity
+                testID="pause-recording-button"
+                accessibilityLabel="Pause recording"
+                accessible={true}
+                accessibilityHint="Pause recording your journal entry"
+                accessibilityRole="button"
+                onPress={() => stopRecording()}
+              >
                 <Ionicons
                   name={recorderState.isRecording ? "pause" : "play"}
                   size={32}

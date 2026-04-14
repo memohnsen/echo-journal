@@ -3,9 +3,8 @@ import { MOODS, TOPICS } from "@/src/constants/entries";
 import { storage } from "@/src/constants/mmkv";
 import { Mood } from "@/src/types/entry";
 import { Ionicons } from "@expo/vector-icons";
-import { FlashList } from "@shopify/flash-list";
 import { Image } from "expo-image";
-import { BottomSheet, Input, TextField } from "heroui-native";
+import { Input, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -159,12 +158,22 @@ const Settings = () => {
                     variant={
                       selectedTopic.includes(topic) ? "selected" : "filled"
                     }
+                    testID="topic-chip"
+                    accessible={true}
+                    accessibilityLabel="Select your default topic"
+                    accessibilityHint="Select your default topic for new journal entries"
+                    accessibilityRole="button"
                   />
                 </View>
               ))}
             <TouchableOpacity
               onPress={() => setOpenSheet(true)}
               className="p-1 bg-#F2F2F7 rounded-full"
+              testID="add-topic-button"
+              accessible={true}
+              accessibilityLabel="Add topic"
+              accessibilityHint="Add a new topic option for your journal entries"
+              accessibilityRole="button"
             >
               <Ionicons name="add" size={18} color="black" />
             </TouchableOpacity>
@@ -184,7 +193,14 @@ const Settings = () => {
               <Text className="font-semibold text-center text-2xl">
                 Name Your New Topic
               </Text>
-              <TouchableOpacity onPress={() => setOpenSheet(false)}>
+              <TouchableOpacity
+                onPress={() => setOpenSheet(false)}
+                testID="close-modal-button"
+                accessible={true}
+                accessibilityLabel="Close popup"
+                accessibilityHint="Close the popup"
+                accessibilityRole="button"
+              >
                 <Ionicons
                   name="close"
                   size={20}
@@ -197,7 +213,13 @@ const Settings = () => {
                 />
               </TouchableOpacity>
             </View>
-            <TextField>
+            <TextField
+              testID="topic-text-field"
+              accessible={true}
+              accessibilityLabel="Add a topic name"
+              accessibilityHint="Add a name for your new topic"
+              accessibilityRole="button"
+            >
               <Input
                 placeholder="Add Topic Name..."
                 value={topicName}
@@ -208,6 +230,11 @@ const Settings = () => {
             <TouchableOpacity
               onPress={() => saveNewTopics()}
               className="items-center flex-row justify-center bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-3 rounded-full"
+              testID="save-topic-button"
+              accessible={true}
+              accessibilityLabel="Save topic"
+              accessibilityHint="Save your new topic for your journal entries"
+              accessibilityRole="button"
             >
               <Ionicons name="checkmark" size={20} color="white" />
               <Text className="text-white font-semibold text-lg">Confirm</Text>
