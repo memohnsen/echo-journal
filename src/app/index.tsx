@@ -130,6 +130,14 @@ export default function Index() {
     }
   };
 
+  const pauseRecording = () => {
+    if (recorderState.isRecording) {
+      audioRecorder.pause();
+    } else {
+      audioRecorder.record();
+    }
+  };
+
   useEffect(() => {
     (async () => {
       const status = await AudioModule.requestRecordingPermissionsAsync();
@@ -392,7 +400,7 @@ export default function Index() {
                 accessible={true}
                 accessibilityHint="Pause recording your journal entry"
                 accessibilityRole="button"
-                onPress={() => stopRecording()}
+                onPress={() => pauseRecording()}
               >
                 <Ionicons
                   name={recorderState.isRecording ? "pause" : "play"}

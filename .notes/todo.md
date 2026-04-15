@@ -14,9 +14,8 @@
 -[x] accessibility
 -[x] list empty component
 -[x] unit testing
--[ ] ui testing
--[ ] maestro testing
--[ ] error in pause and play
+-[x] error in pause and play
+-[ ] auto reload on focus effect index
 -[ ] search by title
 -[ ] filter by date
 -[ ] ai chat with notes
@@ -24,3 +23,4 @@
 -[ ] biometrics and face id lock notes
 -[ ] improve ui
 -[ ] animations
+-[ ] ui testing
