@@ -13,7 +13,7 @@
 -[x] long press to delete saved topics
 -[x] accessibility
 -[x] list empty component
--[ ] unit testing
+-[x] unit testing
 -[ ] ui testing
 -[ ] maestro testing
 -[ ] error in pause and play

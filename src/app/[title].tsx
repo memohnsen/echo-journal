@@ -12,6 +12,7 @@ import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
+import { handlePlayback } from "../utils/audioPlayer";
 
 const EditEntry = () => {
   const { title, date } = useLocalSearchParams();
@@ -54,17 +55,6 @@ const EditEntry = () => {
   const generateSummary = () => {
     setGeneratingSummary((prev) => !prev);
     return;
-  };
-
-  const handlePlayback = () => {
-    if (status.playing) {
-      player.pause();
-    } else if (status.currentTime === status.duration) {
-      player.seekTo(0);
-      player.play();
-    } else {
-      player.play();
-    }
   };
 
   const syncStorageToState = () => {
@@ -156,7 +146,7 @@ const EditEntry = () => {
             totalTime={recordingTimeSeconds(status.duration)}
             progress={audioProgress(status.currentTime, status.duration)}
             isPlaying={status.playing}
-            onPress={() => handlePlayback()}
+            onPress={() => handlePlayback(player, status)}
             testID="waveform-button"
             accessible={true}
             accessibilityLabel="Play audio"

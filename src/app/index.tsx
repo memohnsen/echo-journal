@@ -17,7 +17,7 @@ import { router } from "expo-router";
 import { BottomSheet } from "heroui-native";
 import { useEffect, useRef, useState } from "react";
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
-import { recordingTimeMs } from "../utils/formatTime";
+import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
 
 type ListItem =
@@ -55,11 +55,6 @@ export default function Index() {
     }
 
     return filtered;
-  };
-
-  const toDateTimestamp = (date: string): number => {
-    const parsed = Date.parse(date);
-    return Number.isNaN(parsed) ? 0 : parsed;
   };
 
   const buildListItems = (entries: Entry[]): ListItem[] => {

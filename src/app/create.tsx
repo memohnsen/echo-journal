@@ -22,6 +22,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { fetch as expoFetch } from "expo/fetch";
 import { generateAPIUrl } from "../utils/apiUrl";
+import { handlePlayback } from "../utils/audioPlayer";
 
 const Create = () => {
   const { duration } = useLocalSearchParams();
@@ -180,17 +181,6 @@ ${sourceText}`
     });
   };
 
-  const handlePlayback = () => {
-    if (status.playing) {
-      player.pause();
-    } else if (status.currentTime === status.duration) {
-      player.seekTo(0);
-      player.play();
-    } else {
-      player.play();
-    }
-  };
-
   useEffect(() => {
     const defaultMood: Mood = storage.getString("defaultMood") as Mood;
     if (defaultMood) {
@@ -251,7 +241,7 @@ ${sourceText}`
             totalTime={recordingTimeSeconds(status.duration)}
             progress={audioProgress(status.currentTime, status.duration)}
             isPlaying={status.playing}
-            onPress={() => handlePlayback()}
+            onPress={() => handlePlayback(player, status)}
             testID="waveform-button"
             accessible={true}
             accessibilityLabel="Play audio"

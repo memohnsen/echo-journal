@@ -16,3 +16,8 @@ export const recordingTimeSeconds = (duration: number) => {
 export const audioProgress = (current: number, duration: number) => {
   return duration > 0 ? Math.min(1, current / duration) : 0;
 };
+
+export const toDateTimestamp = (date: string): number => {
+  const parsed = Date.parse(date);
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
