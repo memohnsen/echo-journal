@@ -1,8 +1,8 @@
-// duration is milliseconds
 export const recordingTimeMs = (duration: number) => {
-  const total = Math.floor((duration % 60000) / 1000);
-  const minutes = Math.floor(total / 60);
-  const seconds = total % 60;
+  const safe = Number.isFinite(duration) ? Math.max(0, duration) : 0;
+  const totalSeconds = Math.floor(safe / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 

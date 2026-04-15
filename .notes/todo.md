@@ -13,7 +13,9 @@
 -[x] long press to delete saved topics
 -[x] accessibility
 -[x] list empty component
--[ ] testing - unit and maestro
+-[ ] unit testing
+-[ ] ui testing
+-[ ] maestro testing
 -[ ] error in pause and play
 -[ ] search by title
 -[ ] filter by date
