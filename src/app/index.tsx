@@ -1,5 +1,4 @@
 import EntryCard from "@/src/components/EntryCard";
-import Chip from "@/src/components/ui/Chip";
 import MoodDropdown from "@/src/components/ui/MoodDropdown";
 import TopicDropdown from "@/src/components/ui/TopicDropdown";
 import { storage } from "@/src/constants/mmkv";
@@ -15,10 +14,11 @@ import {
 } from "expo-audio";
 import { router } from "expo-router";
 import { BottomSheet } from "heroui-native";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
 import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
+import { HomeListHeader } from "../components/HomeHeader";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -30,7 +30,7 @@ export default function Index() {
   const [selectedMood, setSelectedMood] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
   const [openSheet, setOpenSheet] = useState(false);
-
+  const [searchTerm, setSearchTerm] = useState("");
   const [storedData, setStoredData] = useState<Entry[]>();
 
   // LIST DATA
@@ -40,8 +40,7 @@ export default function Index() {
     if (storedData) {
       if (selectedMood && selectedTopic) {
         filtered = storedData.filter(
-          (item) =>
-            item.mood === selectedMood && item.topics?.includes(selectedTopic),
+          (item) => item.mood === selectedMood && item.topics === selectedTopic,
         );
       } else if (selectedMood) {
         filtered = storedData.filter((item) => item.mood === selectedMood);
@@ -53,8 +52,19 @@ export default function Index() {
     } else {
       return [];
     }
+    const list = filtered.sort(
+      (a, b) => toDateTimestamp(b.date) - toDateTimestamp(a.date),
+    );
 
-    return filtered;
+    const standardizedSearch = searchTerm.trim().toLowerCase();
+
+    if (!standardizedSearch) {
+      return list;
+    } else {
+      return list.filter((item) =>
+        item.title.toLowerCase().includes(standardizedSearch),
+      );
+    }
   };
 
   const buildListItems = (entries: Entry[]): ListItem[] => {
@@ -81,11 +91,7 @@ export default function Index() {
     return items;
   };
 
-  const sortedEntries = filteredData()
-    .slice()
-    .sort((a, b) => toDateTimestamp(b.date) - toDateTimestamp(a.date));
-
-  const listItems = buildListItems(sortedEntries);
+  const listItems = buildListItems(filteredData());
 
   const today = new Date();
 
@@ -198,48 +204,18 @@ export default function Index() {
             paddingBottom: 70,
           }}
           onRefresh={() => syncStorageToState()}
-          ListHeaderComponent={() => (
-            <View className="mx-4" testID="home-screen">
-              <Text
-                testID="home-title"
-                accessible={true}
-                accessibilityLabel="EchoJournal"
-                accessibilityRole="header"
-                className="font-bold text-4xl mb-4"
-              >
-                EchoJournal
-              </Text>
-              <View className="flex-row gap-2 mb-6 items-center">
-                <Chip
-                  text={selectedMood ? selectedMood.capitalize() : "All Moods"}
-                  onPress={() => setMoodOpen((prev) => !prev)}
-                  variant={selectedMood ? "selected" : "outline"}
-                  clearFilter={() => setSelectedMood("")}
-                  selectedMood={selectedMood}
-                  image={true}
-                  testID="mood-chip"
-                  accessible={true}
-                  accessibilityLabel="Select your mood"
-                  accessibilityHint="Filter journal entries by mood"
-                  accessibilityRole="button"
-                />
-                <Chip
-                  text={
-                    selectedTopic ? selectedTopic.capitalize() : "All Topics"
-                  }
-                  onPress={() => setTopicsOpen((prev) => !prev)}
-                  variant={selectedTopic ? "selected" : "outline"}
-                  clearFilter={() => setSelectedTopic("")}
-                  selectedTopic={selectedTopic}
-                  testID="topic-chip"
-                  accessible={true}
-                  accessibilityLabel="Select your topic"
-                  accessibilityHint="Filter journal entries by topic"
-                  accessibilityRole="button"
-                />
-              </View>
-            </View>
-          )}
+          ListHeaderComponent={
+            <HomeListHeader
+              searchTerm={searchTerm}
+              onSearchTermChange={setSearchTerm}
+              selectedMood={selectedMood}
+              onMoodChipPress={() => setMoodOpen((prev) => !prev)}
+              onClearMood={() => setSelectedMood("")}
+              selectedTopic={selectedTopic}
+              onTopicChipPress={() => setTopicsOpen((prev) => !prev)}
+              onClearTopic={() => setSelectedTopic("")}
+            />
+          }
           renderItem={({ item }) => {
             if (item.type === "header") {
               return (

@@ -15,9 +15,9 @@
 -[x] list empty component
 -[x] unit testing
 -[x] error in pause and play
--[ ] auto reload on focus effect index
--[ ] search by title
+-[x] search by title
 -[ ] filter by date
+-[ ] auto reload on focus effect index
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete
 -[ ] biometrics and face id lock notes
