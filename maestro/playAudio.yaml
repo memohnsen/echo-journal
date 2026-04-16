@@ -1,5 +1,0 @@
-appId: com.memohnsen.echojournal
----
-- launchApp:
-    clearState: true
-- killApp

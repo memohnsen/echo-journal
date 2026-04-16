@@ -16,7 +16,8 @@
 -[x] unit testing
 -[x] error in pause and play
 -[x] search by title
--[ ] filter by date
+-[x] filter by date
+-[ ] fix ui on dropdowns
 -[ ] auto reload on focus effect index
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete

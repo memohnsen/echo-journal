@@ -3,6 +3,14 @@ import { ColorValue } from "react-native";
 
 export const TOPICS = ["work", "friends", "family", "love", "surprise"];
 
+export const DATE_RANGES_ARRAY = [
+  "Last 30 Days",
+  "Last 90 Days",
+  "Last 6 Months",
+  "Last Year",
+  "All Time",
+];
+
 interface MoodsImages {
   mood: Mood;
   image: string;

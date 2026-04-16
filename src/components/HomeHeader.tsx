@@ -1,4 +1,5 @@
-import { SearchField, Chip } from "heroui-native";
+import { SearchField } from "heroui-native";
+import Chip from "./ui/Chip";
 import { View, Text } from "react-native";
 
 type HomeListHeaderProps = {
@@ -10,6 +11,8 @@ type HomeListHeaderProps = {
   selectedTopic: string;
   onTopicChipPress: () => void;
   onClearTopic: () => void;
+  dateRange: string;
+  onDateChipPress: () => void;
 };
 
 export function HomeListHeader({
@@ -21,6 +24,8 @@ export function HomeListHeader({
   selectedTopic,
   onTopicChipPress,
   onClearTopic,
+  dateRange,
+  onDateChipPress,
 }: HomeListHeaderProps) {
   return (
     <View className="mx-4" testID="home-screen">
@@ -65,6 +70,17 @@ export function HomeListHeader({
           accessible={true}
           accessibilityLabel="Select your topic"
           accessibilityHint="Filter journal entries by topic"
+          accessibilityRole="button"
+        />
+        <Chip
+          text={dateRange}
+          onPress={onDateChipPress}
+          variant={dateRange ? "selected" : "outline"}
+          clearFilter={onClearTopic}
+          testID="date-range-chip"
+          accessible={true}
+          accessibilityLabel="Select your date range"
+          accessibilityHint="Filter journal entries by date"
           accessibilityRole="button"
         />
       </View>

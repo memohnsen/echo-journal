@@ -1,5 +1,6 @@
 import EntryCard from "@/src/components/EntryCard";
 import MoodDropdown from "@/src/components/ui/MoodDropdown";
+import { startOfDay, subDays } from "date-fns";
 import TopicDropdown from "@/src/components/ui/TopicDropdown";
 import { storage } from "@/src/constants/mmkv";
 import { Entry } from "@/src/types/entry";
@@ -19,6 +20,7 @@ import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
 import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
 import { HomeListHeader } from "../components/HomeHeader";
+import { DateDropdown } from "../components/ui/DateDropdown";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -27,9 +29,13 @@ type ListItem =
 export default function Index() {
   const [moodOpen, setMoodOpen] = useState(false);
   const [topicsOpen, setTopicsOpen] = useState(false);
+  const [datesOpen, setDatesOpen] = useState(false);
+  const [openSheet, setOpenSheet] = useState(false);
+
   const [selectedMood, setSelectedMood] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
-  const [openSheet, setOpenSheet] = useState(false);
+  const [dateRange, setDateRange] = useState("All Time");
+
   const [searchTerm, setSearchTerm] = useState("");
   const [storedData, setStoredData] = useState<Entry[]>();
 
@@ -52,16 +58,43 @@ export default function Index() {
     } else {
       return [];
     }
+
     const list = filtered.sort(
       (a, b) => toDateTimestamp(b.date) - toDateTimestamp(a.date),
     );
 
+    const daysForDateRange = (range: string): number | null => {
+      switch (range) {
+        case "Last 30 Days":
+          return 30;
+        case "Last 90 Days":
+          return 90;
+        case "Last 6 Months":
+          return 180;
+        case "Last Year":
+          return 365;
+        case "All Time":
+          return null;
+        default:
+          return null;
+      }
+    };
+
+    const finalFilteredList = () => {
+      const days = daysForDateRange(dateRange);
+      if (days === null) {
+        return list;
+      }
+      const cutoff = startOfDay(subDays(new Date(), days)).getTime();
+      return list.filter((item) => toDateTimestamp(item.date) >= cutoff);
+    };
+
     const standardizedSearch = searchTerm.trim().toLowerCase();
 
     if (!standardizedSearch) {
-      return list;
+      return finalFilteredList();
     } else {
-      return list.filter((item) =>
+      return finalFilteredList().filter((item) =>
         item.title.toLowerCase().includes(standardizedSearch),
       );
     }
@@ -214,6 +247,8 @@ export default function Index() {
               selectedTopic={selectedTopic}
               onTopicChipPress={() => setTopicsOpen((prev) => !prev)}
               onClearTopic={() => setSelectedTopic("")}
+              dateRange={dateRange}
+              onDateChipPress={() => setDatesOpen((prev) => !prev)}
             />
           }
           renderItem={({ item }) => {
@@ -279,6 +314,20 @@ export default function Index() {
             accessible={true}
             accessibilityLabel="Open topic options"
             accessibilityHint="Open the sheet to select and filter by a given topic"
+            accessibilityRole="button"
+          />
+        )}
+
+        {datesOpen && (
+          <DateDropdown
+            visible={datesOpen}
+            setDateOpen={setDatesOpen}
+            setDateRange={setDateRange}
+            dateRange={dateRange}
+            testID="date-dropdown-button"
+            accessible={true}
+            accessibilityLabel="Open date range options"
+            accessibilityHint="Open the sheet to select a date range filter"
             accessibilityRole="button"
           />
         )}
