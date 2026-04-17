@@ -40,10 +40,23 @@ const MoodDropdown = ({
       transparent={true}
       presentationStyle="overFullScreen"
     >
-      <View className="flex-1 items-center pt-52 bg-black/20">
-        <View className="items-start gap-4 bg-surface w-11/12 p-4 rounded-2xl shadow">
+      <View className="flex-1 items-center bg-black/20">
+        <View className="gap-4 top-70 bg-surface w-11/12 p-4 rounded-2xl shadow">
+          <View className="items-end justify-end my-0">
+            <TouchableOpacity onPress={() => setMoodOpen(false)}>
+              <Ionicons
+                name="close"
+                size={16}
+                color="black"
+                className="bg-gray-200 rounded-full p-1"
+              />
+            </TouchableOpacity>
+          </View>
           {MOODS.map((mood) => (
-            <View key={mood.mood} className="flex-row items-center gap-60">
+            <View
+              key={mood.mood}
+              className="flex-row items-center justify-between"
+            >
               <TouchableOpacity
                 onPress={() => {
                   setSelectedMood((prev) =>

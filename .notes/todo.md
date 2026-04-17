@@ -17,7 +17,7 @@
 -[x] error in pause and play
 -[x] search by title
 -[x] filter by date
--[ ] fix ui on dropdowns
+-[x] fix ui on dropdowns
 -[ ] auto reload on focus effect index
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete

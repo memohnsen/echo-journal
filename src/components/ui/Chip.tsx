@@ -20,6 +20,7 @@ interface ChipProps {
   clearFilter?: () => void;
   selectedMood?: string;
   selectedTopic?: string;
+  dateRange?: string;
   image?: boolean;
   testID?: string;
   accessible?: boolean;
@@ -36,6 +37,7 @@ const Chip = ({
   clearFilter,
   selectedMood,
   selectedTopic,
+  dateRange,
   image,
   testID,
   accessibilityHint,

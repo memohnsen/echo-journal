@@ -249,6 +249,7 @@ export default function Index() {
               onClearTopic={() => setSelectedTopic("")}
               dateRange={dateRange}
               onDateChipPress={() => setDatesOpen((prev) => !prev)}
+              onClearDate={() => setDateRange("All Time")}
             />
           }
           renderItem={({ item }) => {

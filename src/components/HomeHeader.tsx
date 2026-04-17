@@ -13,6 +13,7 @@ type HomeListHeaderProps = {
   onClearTopic: () => void;
   dateRange: string;
   onDateChipPress: () => void;
+  onClearDate: () => void;
 };
 
 export function HomeListHeader({
@@ -26,6 +27,7 @@ export function HomeListHeader({
   onClearTopic,
   dateRange,
   onDateChipPress,
+  onClearDate,
 }: HomeListHeaderProps) {
   return (
     <View className="mx-4" testID="home-screen">
@@ -76,7 +78,8 @@ export function HomeListHeader({
           text={dateRange}
           onPress={onDateChipPress}
           variant={dateRange ? "selected" : "outline"}
-          clearFilter={onClearTopic}
+          clearFilter={onClearDate}
+          dateRange={dateRange}
           testID="date-range-chip"
           accessible={true}
           accessibilityLabel="Select your date range"

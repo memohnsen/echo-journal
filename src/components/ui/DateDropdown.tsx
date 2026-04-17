@@ -1,4 +1,5 @@
 import { DATE_RANGES_ARRAY } from "@/src/constants/entries";
+import "@/src/utils/capitalize";
 import { Ionicons } from "@expo/vector-icons";
 import {
   AccessibilityRole,
@@ -38,10 +39,20 @@ export const DateDropdown = ({
       transparent={true}
       presentationStyle="overFullScreen"
     >
-      <View className="flex-1 items-center pt-52 bg-black/20">
-        <View className="items-start gap-4 bg-surface w-11/12 p-4 rounded-2xl shadow">
+      <View className="flex-1 items-center bg-black/20">
+        <View className="gap-4 top-70 bg-surface w-11/12 p-4 rounded-2xl shadow">
+          <View className="items-end justify-end my-0">
+            <TouchableOpacity onPress={() => setDateOpen(false)}>
+              <Ionicons
+                name="close"
+                size={16}
+                color="black"
+                className="bg-gray-200 rounded-full p-1"
+              />
+            </TouchableOpacity>
+          </View>
           {DATE_RANGES_ARRAY.map((date) => (
-            <View key={date} className="flex-row items-center gap-60">
+            <View key={date} className="flex-row items-center justify-between">
               <TouchableOpacity
                 onPress={() => {
                   setDateRange((prev) => (prev === date ? "All Time" : date));
