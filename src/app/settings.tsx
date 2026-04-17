@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { DangerListItem } from "../components/ui/DangerListItem";
 
 const Settings = () => {
   const [selectedMood, setSelectedMood] = useState<Mood>("other");
@@ -30,6 +31,30 @@ const Settings = () => {
     } else {
       storage.set(location, item);
     }
+  };
+
+  const deleteAllEntries = () => {
+    const keys = storage.getAllKeys();
+    keys.map((key) => {
+      if (key.includes("")) {
+        storage.remove(key);
+      }
+    });
+
+    Alert.alert("All your entries have been deleted from your local storage");
+
+    return;
+  };
+
+  const deleteAllData = () => {
+    const keys = storage.getAllKeys();
+    keys.map((key) => {
+      storage.remove(key);
+    });
+
+    Alert.alert("All your data has been deleted from your local storage");
+
+    return;
   };
 
   const saveNewTopics = () => {
@@ -81,9 +106,7 @@ const Settings = () => {
     if (defaultTopic) {
       setSelectedTopic(defaultTopic);
     }
-  }, []);
 
-  useEffect(() => {
     if (!storage.getString("topicOptions")) {
       setTopics(TOPICS);
       const topics = JSON.stringify(TOPICS);
@@ -179,6 +202,16 @@ const Settings = () => {
             </TouchableOpacity>
           </ScrollView>
         </View>
+
+        <DangerListItem
+          title="Delete All Entries"
+          onPress={() => deleteAllEntries()}
+        />
+
+        <DangerListItem
+          title="Delete All Data"
+          onPress={() => deleteAllData()}
+        />
       </View>
 
       <Modal

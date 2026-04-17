@@ -18,10 +18,12 @@
 -[x] search by title
 -[x] filter by date
 -[x] fix ui on dropdowns
+-[x] delete all entries on settings
+-[ ] add debug setting to auto fill with sample data for testing
+-[ ] onboarding
 -[ ] auto reload on focus effect index
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete
 -[ ] biometrics and face id lock notes
--[ ] improve ui
 -[ ] animations
 -[ ] ui testing

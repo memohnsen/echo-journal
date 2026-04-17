@@ -15,7 +15,7 @@ import {
 } from "expo-audio";
 import { router } from "expo-router";
 import { BottomSheet } from "heroui-native";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
 import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
