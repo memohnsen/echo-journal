@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { DangerListItem } from "../components/ui/DangerListItem";
+import { fillSampleData } from "../utils/fillDevSampleData";
 
 const Settings = () => {
   const [selectedMood, setSelectedMood] = useState<Mood>("other");
@@ -212,6 +213,13 @@ const Settings = () => {
           title="Delete All Data"
           onPress={() => deleteAllData()}
         />
+
+        {__DEV__ && (
+          <DangerListItem
+            title="Delete All Entries and Fill with Sample Data"
+            onPress={() => fillSampleData()}
+          />
+        )}
       </View>
 
       <Modal

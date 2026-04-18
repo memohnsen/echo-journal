@@ -19,7 +19,7 @@
 -[x] filter by date
 -[x] fix ui on dropdowns
 -[x] delete all entries on settings
--[ ] add debug setting to auto fill with sample data for testing
+-[x] add debug setting to auto fill with sample data for testing
 -[ ] onboarding
 -[ ] auto reload on focus effect index
 -[ ] ai chat with notes
