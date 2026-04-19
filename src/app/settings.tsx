@@ -207,18 +207,24 @@ const Settings = () => {
         <DangerListItem
           title="Delete All Entries"
           onPress={() => deleteAllEntries()}
+          isFirst={true}
         />
 
         <DangerListItem
           title="Delete All Data"
           onPress={() => deleteAllData()}
+          isLast={true}
         />
 
         {__DEV__ && (
-          <DangerListItem
-            title="Delete All Entries and Fill with Sample Data"
-            onPress={() => fillSampleData()}
-          />
+          <View className="mt-4">
+            <Text className="text-gray-500 text-lg">DEV</Text>
+            <DangerListItem
+              title="Delete All Entries and Fill with Sample Data"
+              onPress={() => fillSampleData()}
+              isLast={true}
+            />
+          </View>
         )}
       </View>
 
