@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { DangerListItem } from "../components/ui/DangerListItem";
+import { ListItem } from "../components/ui/ListItem";
 import { fillSampleData } from "../utils/fillDevSampleData";
 
 const Settings = () => {
@@ -156,7 +156,6 @@ const Settings = () => {
             ))}
           </View>
         </View>
-
         <View className="bg-white py-4 rounded-2xl mt-4">
           <Text className="font-semibold text-lg mb-2 mx-4">My Topics</Text>
           <Text className="text-on-surface-variant text-md mx-4">
@@ -203,25 +202,33 @@ const Settings = () => {
             </TouchableOpacity>
           </ScrollView>
         </View>
-
-        <DangerListItem
+        <ListItem
+          title="Enable Biometrics"
+          onPress={() => { }}
+          isFirst={true}
+          isLast={true}
+        />
+        :w
+        <ListItem
           title="Delete All Entries"
           onPress={() => deleteAllEntries()}
           isFirst={true}
+          danger={true}
         />
-
-        <DangerListItem
+        <ListItem
           title="Delete All Data"
           onPress={() => deleteAllData()}
+          danger={true}
           isLast={true}
         />
-
         {__DEV__ && (
           <View className="mt-4">
             <Text className="text-gray-500 text-lg">DEV</Text>
-            <DangerListItem
+            <ListItem
               title="Delete All Entries and Fill with Sample Data"
               onPress={() => fillSampleData()}
+              danger={true}
+              isFirst={true}
               isLast={true}
             />
           </View>

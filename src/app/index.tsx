@@ -13,9 +13,9 @@ import {
   useAudioRecorder,
   useAudioRecorderState,
 } from "expo-audio";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { BottomSheet } from "heroui-native";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
 import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
@@ -37,29 +37,38 @@ export default function Index() {
   const [dateRange, setDateRange] = useState("All Time");
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [storedData, setStoredData] = useState<Entry[]>();
+  const [storedData, setStoredData] = useState<Entry[]>([]);
+
+  const syncStorageToState = useCallback(() => {
+    const entryData = storage
+      .getAllKeys()
+      .filter((key) => key.includes("-"))
+      .map((key) => storage.getString(key))
+      .filter((item): item is string => Boolean(item))
+      .map((item) => JSON.parse(item) as Entry);
+
+    setStoredData(entryData);
+  }, []);
 
   // LIST DATA
   const filteredData = (): Entry[] => {
-    let filtered;
-
-    if (storedData) {
-      if (selectedMood && selectedTopic) {
-        filtered = storedData.filter(
-          (item) => item.mood === selectedMood && item.topics === selectedTopic,
-        );
-      } else if (selectedMood) {
-        filtered = storedData.filter((item) => item.mood === selectedMood);
-      } else if (selectedTopic) {
-        filtered = storedData.filter((item) => item.topics === selectedTopic);
-      } else {
-        filtered = storedData;
-      }
-    } else {
+    if (!storedData.length) {
       return [];
     }
 
-    const list = filtered.sort(
+    let filtered = storedData;
+
+    if (selectedMood && selectedTopic) {
+      filtered = storedData.filter(
+        (item) => item.mood === selectedMood && item.topics === selectedTopic,
+      );
+    } else if (selectedMood) {
+      filtered = storedData.filter((item) => item.mood === selectedMood);
+    } else if (selectedTopic) {
+      filtered = storedData.filter((item) => item.topics === selectedTopic);
+    }
+
+    const list = [...filtered].sort(
       (a, b) => toDateTimestamp(b.date) - toDateTimestamp(a.date),
     );
 
@@ -134,23 +143,7 @@ export default function Index() {
     return now.toLocaleDateString();
   };
 
-  const syncStorageToState = () => {
-    const keys = storage.getAllKeys();
-    const entryKeys = keys.filter((key) => key.includes("-"));
-    const entryData = entryKeys.map((data) => {
-      const item = storage.getString(data);
-      if (item) {
-        return JSON.parse(item);
-      } else {
-        console.log("no mmkv data found");
-      }
-    });
-    setStoredData(entryData);
-  };
-
-  useEffect(() => {
-    syncStorageToState();
-  }, []);
+  useFocusEffect(syncStorageToState);
 
   // RECORD AUDIO
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
@@ -224,7 +217,7 @@ export default function Index() {
         ]),
       ]),
     ).start();
-  }, [recorderState.isRecording]);
+  }, [glowOpacity, glowScale, recorderState.isRecording]);
 
   return (
     <>
@@ -236,7 +229,7 @@ export default function Index() {
           contentContainerStyle={{
             paddingBottom: 70,
           }}
-          onRefresh={() => syncStorageToState()}
+          onRefresh={syncStorageToState}
           ListHeaderComponent={
             <HomeListHeader
               searchTerm={searchTerm}
