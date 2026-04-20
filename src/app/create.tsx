@@ -66,6 +66,10 @@ const Create = () => {
     return mood.map((item) => item.image);
   };
 
+  const canSubmit = (): boolean => {
+    return title && topics && selectedMood !== "other" ? false : true;
+  };
+
   const applyTitleAndSummaryFromAssistant = (text: string) => {
     const trimmed = text.trim();
     const lines = trimmed.split(/\r?\n/);
@@ -347,7 +351,12 @@ ${sourceText}`
             saveToStorage();
             router.back();
           }}
-          className="items-center justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#1F70F5] p-4 rounded-full"
+          disabled={canSubmit()}
+          className={
+            canSubmit()
+              ? "items-center justify-center w-2/3 bg-gray-300 p-4 rounded-full"
+              : "items-center justify-center w-2/3 bg-linear-to-b from-[#578CFF] to-[#2F70F5] p-4 rounded-full"
+          }
           testID="save-button"
           accessible={true}
           accessibilityLabel="Save entry"
