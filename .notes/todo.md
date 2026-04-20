@@ -20,12 +20,12 @@
 -[x] fix ui on dropdowns
 -[x] delete all entries on settings
 -[x] add debug setting to auto fill with sample data for testing
--[ ] onboarding
 -[x] auto reload on focus effect index
--[ ] make fields required
+-[x] make fields required
+-[ ] biometrics and face id lock notes
+-[ ] onboarding
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete
--[ ] biometrics and face id lock notes
--[ ] animations
 -[ ] test android
+-[ ] animations
 -[ ] ui testing

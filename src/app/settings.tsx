@@ -223,7 +223,7 @@ const Settings = () => {
         />
         {__DEV__ && (
           <View className="mt-4">
-            <Text className="text-gray-500 text-lg">DEV</Text>
+            <Text className="text-gray-500 text-md">DEV</Text>
             <ListItem
               title="Delete All Entries and Fill with Sample Data"
               onPress={() => fillSampleData()}

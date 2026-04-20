@@ -21,6 +21,7 @@ import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
 import { HomeListHeader } from "../components/HomeHeader";
 import { DateDropdown } from "../components/ui/DateDropdown";
+import * as LocalAuthentication from "expo-local-authentication";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -325,6 +326,24 @@ export default function Index() {
             accessibilityRole="button"
           />
         )}
+
+        <TouchableOpacity
+          className="absolute bottom-28 right-8 bg-linear-to-b from-[#b589d6] to-[#804fb3] rounded-full p-3 shadow"
+          testID="chat-button"
+          accessible={true}
+          accessibilityLabel="Chat"
+          accessibilityHint="Chat with your journal entries"
+          accessibilityRole="button"
+          onPress={() => { }}
+        >
+          <Ionicons
+            name="chatbubble"
+            size={32}
+            color="white"
+            accessible={false}
+            importantForAccessibility="no"
+          />
+        </TouchableOpacity>
 
         <TouchableOpacity
           className="absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"

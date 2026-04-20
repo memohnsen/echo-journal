@@ -50,6 +50,12 @@
           "enableBackgroundRecording": false,
           "recordAudioAndroid": true
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow EchoJournal to use Face ID to secure your journal entries"
+        }
       ]
     ],
     "experiments": {
