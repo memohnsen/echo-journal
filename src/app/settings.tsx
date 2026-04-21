@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
   ScrollView,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -24,6 +25,8 @@ const Settings = () => {
 
   const [openSheet, setOpenSheet] = useState(false);
   const [topicName, setTopicName] = useState("");
+
+  const [biometricsEnabled, setBiometricsEnabled] = useState(false);
 
   const setDefaultStorage = (item: string, location: string) => {
     const stored = storage.getString(location);
@@ -106,6 +109,11 @@ const Settings = () => {
     const defaultTopic = storage.getString("defaultTopic");
     if (defaultTopic) {
       setSelectedTopic(defaultTopic);
+    }
+
+    const key = storage.getBoolean("biometricsEnabled");
+    if (key) {
+      setBiometricsEnabled(key);
     }
 
     if (!storage.getString("topicOptions")) {
@@ -202,25 +210,34 @@ const Settings = () => {
             </TouchableOpacity>
           </ScrollView>
         </View>
-        <ListItem
-          title="Enable Biometrics"
-          onPress={() => { }}
-          isFirst={true}
-          isLast={true}
-        />
-        :w
+
+        <View className="mt-4">
+          <View className="rounded-2xl flex-row justify-between items-center bg-white p-4">
+            <Text className="text-md">Enable Biometrics</Text>
+            <Switch
+              value={biometricsEnabled}
+              onValueChange={(e) => {
+                setBiometricsEnabled(e);
+                storage.set("biometricsEnabled", e);
+              }}
+            />
+          </View>
+        </View>
+
         <ListItem
           title="Delete All Entries"
           onPress={() => deleteAllEntries()}
           isFirst={true}
           danger={true}
         />
+
         <ListItem
           title="Delete All Data"
           onPress={() => deleteAllData()}
           danger={true}
           isLast={true}
         />
+
         {__DEV__ && (
           <View className="mt-4">
             <Text className="text-gray-500 text-md">DEV</Text>

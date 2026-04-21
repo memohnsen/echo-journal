@@ -22,10 +22,11 @@
 -[x] add debug setting to auto fill with sample data for testing
 -[x] auto reload on focus effect index
 -[x] make fields required
--[ ] biometrics and face id lock notes
+-[x] biometrics and face id lock notes
 -[ ] onboarding
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete
 -[ ] test android
+-[ ] animation on page flow from auth to entries
 -[ ] animations
 -[ ] ui testing

@@ -1,18 +1,18 @@
 import Chip from "@/src/components/ui/Chip";
 import EmotionPicker from "@/src/components/ui/EmotionPicker";
 import Waveform from "@/src/components/ui/Waveform";
-import { buttonStyling, MOODS, TOPICS } from "@/src/constants/entries";
+import { MOODS, TOPICS } from "@/src/constants/entries";
 import { storage } from "@/src/constants/mmkv";
 import { Entry, Mood } from "@/src/types/entry";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { Image } from "expo-image";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
+import { Text, TouchableOpacity, View } from "react-native";
 import { handlePlayback } from "../utils/audioPlayer";
+import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
 
 const EditEntry = () => {
   const { title, date } = useLocalSearchParams();
@@ -44,7 +44,6 @@ const EditEntry = () => {
 
     const itemObject = JSON.stringify(item);
     storage.set(`${entryTitle}-${date}`, itemObject);
-    console.log("save successful");
   };
 
   const getImageByMood = () => {

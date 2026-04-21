@@ -21,7 +21,7 @@ import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
 import { HomeListHeader } from "../components/HomeHeader";
 import { DateDropdown } from "../components/ui/DateDropdown";
-import * as LocalAuthentication from "expo-local-authentication";
+import { BiometricsLogin } from "./biometrics";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -39,6 +39,14 @@ export default function Index() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [storedData, setStoredData] = useState<Entry[]>([]);
+
+  const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const biometrics = storage.getBoolean("biometricsEnabled");
+    setBiometricsEnabled(biometrics);
+  }, []);
 
   const syncStorageToState = useCallback(() => {
     const entryData = storage
@@ -219,6 +227,12 @@ export default function Index() {
       ]),
     ).start();
   }, [glowOpacity, glowScale, recorderState.isRecording]);
+
+  if (!isLoggedIn && biometricsEnabled) {
+    return (
+      <BiometricsLogin isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+    );
+  }
 
   return (
     <>
