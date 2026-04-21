@@ -26,7 +26,7 @@
 -[ ] onboarding
 -[ ] ai chat with notes
 -[ ] record by long press and drag to left to delete
--[ ] test android
 -[ ] animation on page flow from auth to entries
--[ ] animations
+-[ ] animation for onboarding
+-[ ] test android
 -[ ] ui testing

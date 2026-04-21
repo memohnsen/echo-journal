@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { ListItem } from "../components/ui/ListItem";
 import { fillSampleData } from "../utils/fillDevSampleData";
+import { router } from "expo-router";
 
 const Settings = () => {
   const [selectedMood, setSelectedMood] = useState<Mood>("other");
@@ -239,16 +240,28 @@ const Settings = () => {
         />
 
         {__DEV__ && (
-          <View className="mt-4">
-            <Text className="text-gray-500 text-md">DEV</Text>
-            <ListItem
-              title="Delete All Entries and Fill with Sample Data"
-              onPress={() => fillSampleData()}
-              danger={true}
-              isFirst={true}
-              isLast={true}
-            />
-          </View>
+          <>
+            <View className="mt-4">
+              <Text className="text-gray-500 text-md">DEV</Text>
+              <ListItem
+                title="Delete All Entries and Fill with Sample Data"
+                onPress={() => fillSampleData()}
+                danger={true}
+                isFirst={true}
+              />
+
+              <ListItem
+                title="Go to Auth"
+                onPress={() => router.push("/biometrics")}
+              />
+
+              <ListItem
+                title="Begin Onboarding Sequence"
+                onPress={() => router.push("/onboarding")}
+                isLast={true}
+              />
+            </View>
+          </>
         )}
       </View>
 

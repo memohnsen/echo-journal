@@ -21,7 +21,7 @@ import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
 import { HomeListHeader } from "../components/HomeHeader";
 import { DateDropdown } from "../components/ui/DateDropdown";
-import { BiometricsLogin } from "./biometrics";
+import BiometricsLogin from "./biometrics";
 
 type ListItem =
   | { type: "header"; date: string; id: string }

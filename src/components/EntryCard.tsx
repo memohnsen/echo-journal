@@ -40,7 +40,7 @@ const EntryCard = ({
     <TouchableOpacity
       onPress={() => {
         router.push({
-          pathname: `/[title]`,
+          pathname: `/entries/[title]`,
           params: {
             title: title,
             date: date,
@@ -84,7 +84,7 @@ const EntryCard = ({
           <View className="flex-row gap-2 pt-2">
             {topics && (
               <Chip
-                onPress={() => {}}
+                onPress={() => { }}
                 variant="filled"
                 text={`# ${topics.capitalize()}`}
                 testID="topic-chip"

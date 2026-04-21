@@ -349,7 +349,7 @@ ${sourceText}`
         <TouchableOpacity
           onPress={() => {
             saveToStorage();
-            router.back();
+            router.dismissTo("/");
           }}
           disabled={canSubmit()}
           className={

@@ -11,8 +11,8 @@ import { router, Stack, useLocalSearchParams } from "expo-router";
 import { BottomSheet, Input, TextArea, TextField } from "heroui-native";
 import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { handlePlayback } from "../utils/audioPlayer";
-import { audioProgress, recordingTimeSeconds } from "../utils/formatTime";
+import { handlePlayback } from "../../utils/audioPlayer";
+import { audioProgress, recordingTimeSeconds } from "../../utils/formatTime";
 
 const EditEntry = () => {
   const { title, date } = useLocalSearchParams();

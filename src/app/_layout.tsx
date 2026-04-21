@@ -58,12 +58,24 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
-            name="[title]"
+            name="entries/[title]"
             options={{
               headerShown: true,
               headerLargeTitleEnabled: false,
               headerTransparent: true,
               headerBackButtonDisplayMode: "minimal",
+            }}
+          />
+          <Stack.Screen
+            name="onboarding"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="biometrics"
+            options={{
+              headerShown: false,
             }}
           />
         </Stack>

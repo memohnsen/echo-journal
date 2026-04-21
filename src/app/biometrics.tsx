@@ -9,7 +9,7 @@ interface BiometricsLoginProps {
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BiometricsLogin = ({
+const BiometricsLogin = ({
   setIsLoggedIn,
   isLoggedIn,
 }: BiometricsLoginProps) => {
@@ -32,7 +32,7 @@ export const BiometricsLogin = ({
   };
 
   if (isLoggedIn) {
-    return <Redirect href={"/index"} />;
+    return <Redirect href={"./index"} />;
   }
 
   return (
@@ -53,3 +53,5 @@ export const BiometricsLogin = ({
     </View>
   );
 };
+
+export default BiometricsLogin;
