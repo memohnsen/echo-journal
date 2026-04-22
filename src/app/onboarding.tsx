@@ -82,77 +82,87 @@ const Onboarding = () => {
   return (
     <View className="flex-1 bg-inverse-on-surface items-center justify-center">
       {pageNumber === 0 && (
-        <View>
-          <Text className="mb-8 text-2xl font-bold text-center">
-            Welcome to EchoJournal!
-          </Text>
-          <View className="flex-row -mx-10 mb-10 items-center justify-center">
-            <Image
-              source={require("@/src/assets/images/sad.svg")}
-              style={{ height: 70, width: 70 }}
-            />
-            <Image
-              source={require("@/src/assets/images/stressed.svg")}
-              style={{ height: 70, width: 70 }}
-            />
-            <Image
-              source={require("@/src/assets/images/neutral.svg")}
-              style={{ height: 70, width: 70 }}
-            />
-            <Image
-              source={require("@/src/assets/images/peaceful.svg")}
-              style={{ height: 70, width: 70 }}
-            />
-            <Image
-              source={require("@/src/assets/images/excited.svg")}
-              style={{ height: 70, width: 70 }}
-            />
+        <>
+          <View>
+            <Text className="mb-8 text-2xl font-bold text-center">
+              Welcome to EchoJournal!
+            </Text>
+            <View className="flex-row -mx-10 mb-10 items-center justify-center">
+              <Image
+                source={require("@/src/assets/images/sad.svg")}
+                style={{ height: 70, width: 70 }}
+              />
+              <Image
+                source={require("@/src/assets/images/stressed.svg")}
+                style={{ height: 70, width: 70 }}
+              />
+              <Image
+                source={require("@/src/assets/images/neutral.svg")}
+                style={{ height: 70, width: 70 }}
+              />
+              <Image
+                source={require("@/src/assets/images/peaceful.svg")}
+                style={{ height: 70, width: 70 }}
+              />
+              <Image
+                source={require("@/src/assets/images/excited.svg")}
+                style={{ height: 70, width: 70 }}
+              />
+            </View>
           </View>
           <CustomButton
             text="Continue"
             onPress={() => setPageNumber((prev) => prev + 1)}
             variant="filled"
+            className="absolute bottom-10"
           />
-        </View>
+        </>
       )}
       {pageNumber === 1 && (
-        <View className="mx-4 items-center justify-center gap-y-10">
-          <Image
-            source={require("@/src/assets/images/sad.svg")}
-            style={{ height: 70, width: 70 }}
-          />
-          <Text className="text-center text-lg">
-            Journaling is one of the best ways to talk through what's bothering
-            you or to remeber those really great moments, but sometimes it's
-            hard to actually put the emotions you're feeling into words
-          </Text>
+        <>
+          <View className="mx-4 items-center justify-center gap-y-10">
+            <Image
+              source={require("@/src/assets/images/sad.svg")}
+              style={{ height: 70, width: 70 }}
+            />
+            <Text className="text-center text-lg">
+              Journaling is one of the best ways to talk through what's
+              bothering you or to remeber those really great moments, but
+              sometimes it's hard to actually put the emotions you're feeling
+              into words
+            </Text>
+          </View>
           <CustomButton
             text="Continue"
             onPress={() => setPageNumber((prev) => prev + 1)}
             variant="filled"
+            className="absolute bottom-10"
           />
-        </View>
+        </>
       )}
       {pageNumber === 2 && (
-        <View className="items-center mx-4 justify-center gap-y-10">
-          <Image
-            source={require("@/src/assets/images/peaceful.svg")}
-            style={{ height: 70, width: 70 }}
-          />
-          <Text className="text-center text-xl font-semibold">
-            That's where EchoJournal comes in.
-          </Text>
-          <Text className="text-center text-lg">
-            EchoJournal lets you talk through what you're feeling to help work
-            through those good and bad days. Write a description or get a
-            transcript to remember those key things you want to remeber.
-          </Text>
+        <>
+          <View className="items-center mx-4 justify-center gap-y-10">
+            <Image
+              source={require("@/src/assets/images/peaceful.svg")}
+              style={{ height: 70, width: 70 }}
+            />
+            <Text className="text-center text-xl font-semibold">
+              That's where EchoJournal comes in.
+            </Text>
+            <Text className="text-center text-lg">
+              EchoJournal lets you talk through what you're feeling to help work
+              through those good and bad days. Write a description or get a
+              transcript to remember those key things you want to remeber.
+            </Text>
+          </View>
           <CustomButton
             text="Continue"
             onPress={() => setPageNumber((prev) => prev + 1)}
             variant="filled"
+            className="absolute bottom-10"
           />
-        </View>
+        </>
       )}
       {pageNumber === 3 && (
         <View className="mx-4 items-center justify-center gap-y-10">

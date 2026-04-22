@@ -4,9 +4,15 @@ interface CustomButtonProps {
   text: string;
   onPress: () => void;
   variant: "outline" | "filled";
+  className?: string;
 }
 
-const CustomButton = ({ text, onPress, variant }: CustomButtonProps) => {
+const CustomButton = ({
+  text,
+  onPress,
+  variant,
+  className,
+}: CustomButtonProps) => {
   const getButtonStyling = (): ViewStyle => {
     switch (variant) {
       case "outline":
@@ -33,7 +39,7 @@ const CustomButton = ({ text, onPress, variant }: CustomButtonProps) => {
   };
 
   return (
-    <View>
+    <View className={className}>
       <TouchableOpacity
         style={[
           getButtonStyling(),
