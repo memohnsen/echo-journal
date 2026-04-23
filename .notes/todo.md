@@ -23,7 +23,8 @@
 -[x] auto reload on focus effect index
 -[x] make fields required
 -[x] biometrics and face id lock notes
--[ ] onboarding
+-[x] onboarding
+-[x] fix formatting and location of images on onboarding 1
 -[ ] record and chat button expands either up form single button or rotates around like game keypad
 -[ ] record by long press and drag to left to delete
 -[ ] animation on page flow from auth to entries

@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Easing, Text, TouchableOpacity, View } from "react-native";
 import CustomButton from "../components/ui/CustomButton";
 import { Redirect, router } from "expo-router";
 import {
@@ -11,6 +11,7 @@ import {
 import { storage } from "../constants/mmkv";
 import { Ionicons } from "@expo/vector-icons";
 import { recordingTimeMs } from "../utils/formatTime";
+import { MOODS } from "../constants/entries";
 
 const Onboarding = () => {
   const [pageNumber, setPageNumber] = useState(0);
@@ -47,6 +48,13 @@ const Onboarding = () => {
 
   const glowScale = useRef(new Animated.Value(1)).current;
   const glowOpacity = useRef(new Animated.Value(0.5)).current;
+  const slideOneAnimations = useRef(
+    MOODS.map(() => ({
+      translateY: new Animated.Value(-180),
+      scale: new Animated.Value(0.9),
+      opacity: new Animated.Value(0),
+    })),
+  ).current;
 
   useEffect(() => {
     Animated.loop(
@@ -79,6 +87,54 @@ const Onboarding = () => {
     ).start();
   }, [glowOpacity, glowScale, recorderState.isRecording]);
 
+  useEffect(() => {
+    if (pageNumber !== 0) {
+      return;
+    }
+
+    slideOneAnimations.forEach((animation) => {
+      animation.translateY.setValue(-180);
+      animation.scale.setValue(0.9);
+      animation.opacity.setValue(0);
+    });
+
+    const enterAnimation = Animated.parallel(
+      slideOneAnimations.map((animation, index) =>
+        Animated.sequence([
+          Animated.delay(index * 140),
+          Animated.parallel([
+            Animated.spring(animation.translateY, {
+              toValue: 0,
+              damping: 8,
+              stiffness: 150,
+              mass: 0.7,
+              useNativeDriver: true,
+            }),
+            Animated.spring(animation.scale, {
+              toValue: 1,
+              damping: 8,
+              stiffness: 180,
+              mass: 0.65,
+              useNativeDriver: true,
+            }),
+            Animated.timing(animation.opacity, {
+              toValue: 1,
+              duration: 220,
+              easing: Easing.out(Easing.quad),
+              useNativeDriver: true,
+            }),
+          ]),
+        ]),
+      ),
+    );
+
+    enterAnimation.start();
+
+    return () => {
+      enterAnimation.stop();
+    };
+  }, [pageNumber, slideOneAnimations]);
+
   return (
     <View className="flex-1 bg-inverse-on-surface items-center justify-center">
       {pageNumber === 0 && (
@@ -88,26 +144,23 @@ const Onboarding = () => {
               Welcome to EchoJournal!
             </Text>
             <View className="flex-row -mx-10 mb-10 items-center justify-center">
-              <Image
-                source={require("@/src/assets/images/sad.svg")}
-                style={{ height: 70, width: 70 }}
-              />
-              <Image
-                source={require("@/src/assets/images/stressed.svg")}
-                style={{ height: 70, width: 70 }}
-              />
-              <Image
-                source={require("@/src/assets/images/neutral.svg")}
-                style={{ height: 70, width: 70 }}
-              />
-              <Image
-                source={require("@/src/assets/images/peaceful.svg")}
-                style={{ height: 70, width: 70 }}
-              />
-              <Image
-                source={require("@/src/assets/images/excited.svg")}
-                style={{ height: 70, width: 70 }}
-              />
+              {MOODS.map((source, index) => (
+                <Animated.View
+                  key={`${source}-${index}`}
+                  style={{
+                    opacity: slideOneAnimations[index].opacity,
+                    transform: [
+                      { translateY: slideOneAnimations[index].translateY },
+                      { scale: slideOneAnimations[index].scale },
+                    ],
+                  }}
+                >
+                  <Image
+                    source={source.image}
+                    style={{ height: 70, width: 70 }}
+                  />
+                </Animated.View>
+              ))}
             </View>
           </View>
           <CustomButton
@@ -126,10 +179,10 @@ const Onboarding = () => {
               style={{ height: 70, width: 70 }}
             />
             <Text className="text-center text-lg">
-              Journaling is one of the best ways to talk through what's
-              bothering you or to remeber those really great moments, but
-              sometimes it's hard to actually put the emotions you're feeling
-              into words
+              Journaling is one of the best ways to talk through what&apos;s
+              bothering you or to remember those really great moments, but
+              sometimes it&apos;s hard to actually put the emotions you&apos;re
+              feeling into words
             </Text>
           </View>
           <CustomButton
@@ -148,11 +201,11 @@ const Onboarding = () => {
               style={{ height: 70, width: 70 }}
             />
             <Text className="text-center text-xl font-semibold">
-              That's where EchoJournal comes in.
+              That&apos;s where EchoJournal comes in.
             </Text>
             <Text className="text-center text-lg">
-              EchoJournal lets you talk through what you're feeling to help work
-              through those good and bad days. Write a description or get a
+              EchoJournal lets you talk through what you&apos;re feeling to help
+              work through those good and bad days. Write a description or get a
               transcript to remember those key things you want to remeber.
             </Text>
           </View>
@@ -171,7 +224,7 @@ const Onboarding = () => {
             style={{ height: 70, width: 70 }}
           />
           <Text className="text-center font-semibold text-xl">
-            Let's record your first journal entry!
+            Let&apos;s record your first journal entry!
           </Text>
           <View className="relative items-center justify-center w-20 h-20">
             {recorderState.isRecording && (
