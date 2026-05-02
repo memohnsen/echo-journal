@@ -16,12 +16,25 @@ import {
 import { router, useFocusEffect } from "expo-router";
 import { BottomSheet } from "heroui-native";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, Animated, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Animated as RNAnimated,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { recordingTimeMs, toDateTimestamp } from "../utils/formatTime";
 import { Image } from "expo-image";
 import { HomeListHeader } from "../components/HomeHeader";
 import { DateDropdown } from "../components/ui/DateDropdown";
 import BiometricsLogin from "./biometrics";
+import {
+  default as Animated,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+import { HomeActionButton } from "../components/HomeActionButton";
 
 type ListItem =
   | { type: "header"; date: string; id: string }
@@ -42,6 +55,11 @@ export default function Index() {
 
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [buttonsOpen, setButtonsOpen] = useState(false);
+  const translateChatY = useSharedValue(0);
+  const translatePlusY = useSharedValue(0);
+  const addIconRotation = useSharedValue(0);
 
   useEffect(() => {
     const biometrics = storage.getBoolean("biometricsEnabled");
@@ -194,31 +212,31 @@ export default function Index() {
   }, []);
 
   // ANIMATION
-  const glowScale = useRef(new Animated.Value(1)).current;
-  const glowOpacity = useRef(new Animated.Value(0.5)).current;
+  const glowScale = useRef(new RNAnimated.Value(1)).current;
+  const glowOpacity = useRef(new RNAnimated.Value(0.5)).current;
 
   useEffect(() => {
-    Animated.loop(
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(glowScale, {
+    RNAnimated.loop(
+      RNAnimated.parallel([
+        RNAnimated.sequence([
+          RNAnimated.timing(glowScale, {
             toValue: 1.35,
             duration: 900,
             useNativeDriver: true,
           }),
-          Animated.timing(glowScale, {
+          RNAnimated.timing(glowScale, {
             toValue: 1,
             duration: 900,
             useNativeDriver: true,
           }),
         ]),
-        Animated.sequence([
-          Animated.timing(glowOpacity, {
+        RNAnimated.sequence([
+          RNAnimated.timing(glowOpacity, {
             toValue: 0.15,
             duration: 900,
             useNativeDriver: true,
           }),
-          Animated.timing(glowOpacity, {
+          RNAnimated.timing(glowOpacity, {
             toValue: 0.5,
             duration: 900,
             useNativeDriver: true,
@@ -227,6 +245,35 @@ export default function Index() {
       ]),
     ).start();
   }, [glowOpacity, glowScale, recorderState.isRecording]);
+
+  const AnimatedPlusButton = Animated.createAnimatedComponent(HomeActionButton);
+
+  const animatedChatStyles = useAnimatedStyle(() => ({
+    transform: [{ translateY: withSpring(translateChatY.value) }],
+  }));
+
+  const animatedPlusStyles = useAnimatedStyle(() => ({
+    transform: [{ translateY: withSpring(translatePlusY.value) }],
+  }));
+
+  const animatedAddIconStyles = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${addIconRotation.value}deg` }],
+  }));
+
+  const handlePlusPress = () => {
+    translatePlusY.value += buttonsOpen ? 70 : -70;
+  };
+
+  const handleChatPress = () => {
+    translateChatY.value += buttonsOpen ? 140 : -140;
+  };
+
+  const handleAnimation = () => {
+    setButtonsOpen((prev) => !prev);
+    addIconRotation.value = withSpring(buttonsOpen ? 0 : 45);
+    handlePlusPress();
+    handleChatPress();
+  };
 
   if (!isLoggedIn && biometricsEnabled) {
     return (
@@ -298,7 +345,6 @@ export default function Index() {
             </View>
           )}
         />
-
         {moodOpen && (
           <MoodDropdown
             visible={moodOpen}
@@ -312,7 +358,6 @@ export default function Index() {
             accessibilityRole="button"
           />
         )}
-
         {topicsOpen && (
           <TopicDropdown
             visible={topicsOpen}
@@ -326,7 +371,6 @@ export default function Index() {
             accessibilityRole="button"
           />
         )}
-
         {datesOpen && (
           <DateDropdown
             visible={datesOpen}
@@ -341,43 +385,59 @@ export default function Index() {
           />
         )}
 
-        <TouchableOpacity
-          className="absolute bottom-28 right-8 bg-linear-to-b from-[#b589d6] to-[#804fb3] rounded-full p-3 shadow"
-          testID="chat-button"
-          accessible={true}
+        {/* Action Buttons */}
+        {/* Purple Chat */}
+        <AnimatedPlusButton
+          className={
+            "absolute bottom-10 right-8 bg-linear-to-b from-[#b589d6] to-[#804fb3] rounded-full p-3 shadow"
+          }
           accessibilityLabel="Chat"
           accessibilityHint="Chat with your journal entries"
-          accessibilityRole="button"
-          onPress={() => { }}
-        >
-          <Ionicons
-            name="chatbubble"
-            size={32}
-            color="white"
-            accessible={false}
-            importantForAccessibility="no"
-          />
-        </TouchableOpacity>
+          onPress={() => {
+            router.push("/chat");
+          }}
+          iconName="chatbubble"
+          style={animatedChatStyles}
+        />
 
-        <TouchableOpacity
-          className="absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"
-          testID="start-recording-button"
-          accessible={true}
+        {/* Blue Record */}
+        <AnimatedPlusButton
+          className={
+            "absolute bottom-10 right-8 bg-linear-to-b from-green-500 to-green-600 rounded-full p-3 shadow"
+          }
           accessibilityLabel="Plus"
           accessibilityHint="Start a new voice journal entry"
-          accessibilityRole="button"
           onPress={() => {
             record();
             setOpenSheet(true);
           }}
+          iconName="mic"
+          style={animatedPlusStyles}
+        />
+
+        {/* Open Action Menu Button */}
+        <TouchableOpacity
+          className={
+            "absolute bottom-10 right-8 bg-linear-to-b from-[#578CFF] to-[#1F70F5] rounded-full p-3 shadow"
+          }
+          accessible={true}
+          accessibilityLabel={
+            buttonsOpen ? "Close action menu" : "Open action menu"
+          }
+          accessibilityHint="Show or hide journal action buttons"
+          accessibilityRole="button"
+          onPress={handleAnimation}
+          activeOpacity={1}
         >
-          <Ionicons
-            name="add"
-            size={32}
-            color="white"
-            accessible={false}
-            importantForAccessibility="no"
-          />
+          <Animated.View style={animatedAddIconStyles}>
+            <Ionicons
+              name="add"
+              size={32}
+              color="white"
+              accessible={false}
+              importantForAccessibility="no"
+            />
+          </Animated.View>
         </TouchableOpacity>
       </View>
 
@@ -412,7 +472,7 @@ export default function Index() {
               </TouchableOpacity>
               <View className="relative items-center justify-center w-20 h-20">
                 {recorderState.isRecording && (
-                  <Animated.View
+                  <RNAnimated.View
                     pointerEvents="none"
                     className="absolute w-20 h-20 rounded-full bg-[#1F70F5]"
                     style={{

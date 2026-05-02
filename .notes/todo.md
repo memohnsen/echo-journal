@@ -25,10 +25,8 @@
 -[x] biometrics and face id lock notes
 -[x] onboarding
 -[x] fix formatting and location of images on onboarding 1
--[ ] record and chat button expands either up form single button or rotates around like game keypad
--[ ] record by long press and drag to left to delete
+-[x] record and chat button expands either up form single button or rotates around like game keypad
 -[ ] animation on page flow from auth to entries
--[ ] animation for onboarding
 -[ ] ai chat with notes
 -[ ] test android
 -[ ] ui testing
